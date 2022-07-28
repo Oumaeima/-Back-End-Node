@@ -5,45 +5,46 @@ const bcrypt = require('bcrypt');
 var intervention = function (intervention) {
 
     this.sla = intervention.sla;
+    this.owner = intervention.owner;
     this.datedeb = intervention.datedeb;
-    this.datefin = intervention.datefin;
+    this.dateClos = intervention.dateClos;
     this.taches = intervention.taches;
-    this.urgence = intervention.urgence;
- this.matricule = intervention.matricule;
-    this.etat = intervention.etat;
+    this.status = intervention.status;   
+    this.matricule = intervention.matricule;
     this.idd = intervention.idd;
 }
 
+var user = function(user){
+    this.nom = user.nom;
+    this.prenom = user.prenom;
+    this.poste = user.poste;
+    this.tel = user.tel;
+    this.email = user.email;
+    this.photo = user.photo;   
+    this.role = user.role;
+}
 
-// creation des ticket de la part de l'admin  //  
-intervention.createTicketAdmin = (data) => {
+
+// creation des ticket de la part de client //  
+intervention.createTicketClient = (id,data) => {
     return new Promise(async (resolve, reject) => {
         // check email is exist or not
 
         try {
-            var date_ob = new Date();
-            var day = ("0" + date_ob.getDate()).slice(-2);
-            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-            var year = date_ob.getFullYear();
-
-            var date = year + "-" + month + "-" + day;
-            console.log(date);
-
-            var hours = date_ob.getHours();
-            var minutes = date_ob.getMinutes();
-            var seconds = date_ob.getSeconds();
-
-            var dateTime = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+            
             let userItem = {
                 sla: data.sla,
+                owner: data.owner,
                 datedeb: data.datedeb,
+                dateClos: data.dateClos,
                 taches: data.taches,
+                status : data.status,
                 matricule: data.matricule,
-                urgence : data.urgence,
                 idd: data.idd
             };
+            
             dbConn.query(
-                `INSERT INTO intervention SET sla ="${data.sla}" ,datedeb = "${dateTime}",taches = "${data.taches}", idd = (select idd from dossier where matricule ="${data.matricule}" ) ,etat = "nouveau" ,urgence="${data.urgence}"`, [userItem],
+                `INSERT INTO intervention SET sla ="${data.sla}", owner =(SELECT email FROM client WHERE idclt="${id}"), datedeb = "${data.datedeb}", dateClos = "${data.dateClos}",taches = "${data.taches}", idd = (select idd from dossier where idclt ="${id}" ) ,status = "nouveau"`, [userItem],
                 function (err, rows) {
                     if (err) {
                         reject(false)
@@ -53,12 +54,38 @@ intervention.createTicketAdmin = (data) => {
                 }
             );
         } catch (error) { reject(error); }
-    });
+  });
 };
 
-intervention.updateTicketI = (idti, ticketReqData, result) => {
+intervention.updateTicketI = (id, ticketReqData, result) => {
 
-    dbConn.query("UPDATE intervention SET sla=? ,datedeb=?,urgence=?,taches=? WHERE idti = ?", [ticketReqData.sla, ticketReqData.datedeb, ticketReqData.urgence, ticketReqData.taches, idti], (err, res) => {
+    dbConn.query("UPDATE intervention SET sla=?, owner=? ,datedeb=?, dateClos=? ,taches=?, status=? WHERE idti = ?", [ticketReqData.sla, ticketReqData.owner, ticketReqData.datedeb, ticketReqData.dateClos, ticketReqData.taches, ticketReqData.status, id], (err, res) => {
+        if (err) {
+            console.log('Error while updating the ticket');
+            result(null, err);
+        } else {
+            console.log("ticket updated successfully");
+            result(null, res);
+        }
+    });
+}
+
+intervention.updateOwnerTicketInt = (idti, ticketReqData, result) => {
+
+    dbConn.query("UPDATE intervention SET owner=? , status='en cours' WHERE idti = ?", [ticketReqData.owner, idti], (err, res) => {
+        if (err) {
+            console.log('Error while updating the client');
+            result(null, err);
+        } else {
+            console.log("ticket updated successfully");
+            result(null, res);
+        }
+    });
+}
+
+intervention.updateStatClos = (id, result) => {
+
+    dbConn.query("UPDATE intervention SET status='Clos' WHERE idti = ?", [id], (err, res) => {
         if (err) {
             console.log('Error while updating the client');
             result(null, err);
@@ -91,9 +118,9 @@ intervention.getTicketByMatricule = (nom, result) => {
     });
 }
 intervention.getTicketById = (id, result) => {
-    dbConn.query('SELECT * FROM intervention WHERE idd IN (select idd from dossier where idclt= ?)', [id], (err, res) => {
+    dbConn.query('SELECT * FROM intervention WHERE idd= ?', [id], (err, res) => {
         if (err) {
-            console.log('Error while fetching matricule by id', err);
+            console.log('Error while fetching ticket by id', err);
             result(null, err);
         } else {
             result(null, res);
@@ -152,6 +179,18 @@ intervention.getTicketByIdTech = (id, result) => {
     });
 }
 
+// get ticket intervention by technicien
+intervention.getTicketByTech = (id, result) => {
+    dbConn.query('SELECT * FROM intervention WHERE owner = (select email from users where poste="Technicien" and idu = ?)',[id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching emails', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+
 // delete ticket
 
 intervention.delete_TicketInt = (id, result) => {
@@ -179,7 +218,7 @@ intervention.CountTicketsIntervenionStateExpediteur = (result) => {
 }
 
 intervention.updateStateInterventionToEnCours = (idti, result) => {
-    dbConn.query('  UPDATE intervention SET etat="en cours" WHERE idti=?  ', [idti], function (err, res) {
+    dbConn.query('  UPDATE intervention SET status="en cours" WHERE idti=?  ', [idti], function (err, res) {
         if (err) {
             console.log('Error');
             console.log(err)
@@ -202,18 +241,9 @@ intervention.updateStateInterventionResolu = (idti, result) => {
     });
 }
 
-intervention.updateStateInterventionClos = (idti) => {
-    var date_ob = new Date();
-    var day = ("0" + date_ob.getDate()).slice(-2);
-    var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-    var year = date_ob.getFullYear();
-    var date = year + "-" + month + "-" + day;
-    console.log(date);
-    var hours = date_ob.getHours();
-    var minutes = date_ob.getMinutes();
-    var seconds = date_ob.getSeconds();
-    var dateTime = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
-    dbConn.query(`  UPDATE intervention SET etat="Clos" , datefin = "${dateTime}" WHERE idti=?  `, [idti], function (err, res) {
+intervention.updateStateInterventionClos = (id, result) => {
+    
+    dbConn.query(`UPDATE intervention SET status="Clos" WHERE idti=?  `, [id], function (err, res) {
         if (err) {
             console.log('Error');
             console.log(err)
@@ -450,5 +480,6 @@ intervention.delete_TechAff = (idti,idu, result) => {
     });
 
 }
+
 
 module.exports = intervention

@@ -50,6 +50,19 @@ exports.updateAdmin = (req, res) => {
     })
 }
 
+// update Password user
+exports.updateAdminPassword = (req, res) => {
+    const adminReqData = new AdminModel(req.body);
+    console.log('adminReqData update', adminReqData);
+    // check null
+
+    AdminModel.updateAdminPassword(req.params.ida, adminReqData, (err, admin) => {
+        if (err)
+            res.send(err);
+        res.json({ status: true, message: 'Password updated Successfully' })
+    })
+}
+
 // delete user
 exports.delete_Admin = (req, res) => {
     AdminModel.deleteAdmin(req.params.ida, (err, admin) => {

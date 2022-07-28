@@ -105,12 +105,12 @@ exports.loginSuperAdmin = async (req, res, next) => {
         console.log("connectd sucssesfuly");
         console.log(req.body);
 
-        connection.query("select * from superadmin  where email = ?", email, async (err, rows) => {
+        connection.query("SELECT * FROM superadmin WHERE email = ?",email, async (err, rows) => {
             connection.release();
             if (rows.length == 0) {
                 res.status(401).json({ msg: "User not found " })
 
-            } else {
+            }else {
                 const check = await bcrypte.compare(password, rows[0].password);
                 console.log(check);
                 if (check) {
@@ -239,28 +239,9 @@ exports.createuser = async (req, res, next) => {
 
 
     }
-    const mailOptions = {
-        from: 'prologic.opm@gmail.com',
-        to: req.body.email,
-        subject: 'password',
-        text: req.body.password,
-
-    };
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            res.json({ status: true, respMesg: 'ERROR' })
-        } else {
-            res.json({ status: true, respMesg: 'Email Sent Successfully' })
-        }
-    });
+  
 }
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'prologic.opm@gmail.com',
-        pass: '123456789?@'
-    }
-});
+
 
 exports.createClient = async (req, res, next) => {
     let newclient = req.body;

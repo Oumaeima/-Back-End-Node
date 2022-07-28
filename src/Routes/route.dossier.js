@@ -4,8 +4,8 @@ const dossierController = require('../Controllers/dossier');
 /***** dossier****/
 router.get('/getDossierList', dossierController.getDossierList);
 router.post('/createNewDossier', dossierController.createDossier);
-router.put('/:id', dossierController.updateDossier);
 router.delete('/:id', dossierController.deletedossier);
+router.put('/:id', dossierController.updateDossier);
 router.get('/searchRecord/:nom', dossierController.searchDossier);
 router.get('/AllDossier/:id', dossierController.getDossierByID);
 router.get('/findAllMatricules', dossierController.findAllMatricule);

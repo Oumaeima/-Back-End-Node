@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 require("dotenv").config();
+
+
 const app = express();
 const buildPath = path.join(__dirname, '..', 'build');
 app.use(express.json());
@@ -26,21 +28,27 @@ app.get('/', (req, res) => {
 
 const authentificationroute = require('./src/Routes/authentificationroute');
 app.use('/authentification', authentificationroute);
+
 // import dossier routes
 const usedossier = require('./src/Routes/route.dossier');
 app.use('/dossier', usedossier);
+
 // import user routes
 const userRoutes = require('./src/Routes/user.route');
 app.use('/api', userRoutes);
+
 // create Client routes
 const clientRoutes = require('./src/Routes/route.client');
 app.use('/client', clientRoutes);
-// ccreate Admin routes
+
+// create Admin routes
 const admindossier = require('./src/Routes/route.admin');
 app.use('/admin', admindossier);
+
 //create Ticket routes
 const TicketRoutes =require('./src/Routes/route.ticket');
 app.use('/ticket',TicketRoutes); 
+
 // listen to the port
 app.listen(port, () => {
     console.log(`Express is running at port ${port}`);

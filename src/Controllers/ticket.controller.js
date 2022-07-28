@@ -5,15 +5,14 @@ const jwt = require("jsonWebToken");
 
 /*****Creation tickets *****/
 // create new ticket
-exports.createTicketAdmin = (req, res) => {
+exports.createTicketClient = (req, res) => {
     const tic = new ticket(req.body);
     console.log('userReqData', tic);
-    ticket.createTicketAdmin(tic, (err, tic) => {
+    ticket.createTicketClient(req.params.id, tic, (err, tic) => {
         if (err)
             res.send(err);
         else {
-            res.json({ status: true, message: 'ticket Created Successfully' })
-            res.send(ticket)
+            res.send(tic)
         }
     })
 }
@@ -83,9 +82,9 @@ exports.deleteTicketInt = (req, res) => {
     })
 }
 // get ticket by matricule 
-exports.getTicketByMatricule = (req, res) => {
+exports.getTicketByNom = (req, res) => {
     //console.log('get emp by id');
-    ticket.getTicketByMatricule(req.params.nom, (err, tickets) => {
+    ticket.getTicketByNom(req.params.nom, (err, tickets) => {
         if (err)
             res.send(err);
         console.log('single ticket data', tickets);
@@ -102,7 +101,7 @@ exports.getTicketByID = (req, res) => {
         }
         else {
             console.log('Tickets', tickets);
-            res.send( JSON.stringify({ status: 200, error: null, response: tickets }) );
+            res.send( tickets );
         }
     })
   
@@ -159,6 +158,44 @@ exports.updateTicket= (req, res) => {
         })
     
 }
+
+// update ticket owner
+exports.updateOwnerTicketInt= (req, res) => {
+    const ticketReqData = new ticket(req.body);
+    console.log('TicketReqData update', ticketReqData);
+    // check null
+    
+        ticket.updateOwnerTicketInt(req.params.idti, ticketReqData, (err, ticket) => {
+            if (err)
+                res.send(err);
+            res.json({ status: true, message: 'ticket updated Successfully' })
+        })
+    
+}
+
+
+// update status to clos ticket intervention
+exports.updateStatClos= (req, res) => {
+    
+    ticket.updateStatClos(req.params.id, (err, ticket) => {
+        if (err)
+            res.send(err);
+        res.json({ status: true, message: 'ticket updated Successfully' })
+    })
+
+}
+
+exports.getTicketByTech = (req, res) => {
+ 
+    ticket.getTicketByTech(req.params.id, (err, tickets) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', tickets);
+        
+        res.send( JSON.stringify({ status: 200, error: null, response:tickets}) );
+    })
+}
+
 exports.getTicketByIDI = (req, res) => {
  
     ticket.getTicketByIdInt(req.params.id, (err, tickets) => {

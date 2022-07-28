@@ -113,13 +113,13 @@ dossier.findAllMatricule = (result) => {
 }
 
 // update user
-dossier.updateDossier = (idd, userReqData, result) => {
-    dbConn.query("UPDATE dossier SET nomsociete=?,categorie=?,type=?,matricule=? WHERE idd = ?", [userReqData.nomsociete, userReqData.categorie, userReqData.type,userReqData.matricule, idd], (err, res) => {
+dossier.updateDossier = (idd, dossierReqData, result) => {
+    dbConn.query("UPDATE dossier SET nomsociete=?,categorie=?,type=?,matricule=? WHERE idd = ?", [dossierReqData.nomsociete, dossierReqData.categorie, dossierReqData.type,dossierReqData.matricule, idd], (err, res) => {
         if (err) {
             console.log('Error while updating the dossier');
             result(null, err);
         } else {
-            console.log("user updated successfully");
+            console.log("dossier updated successfully");
             result(null, res);
         }
     });

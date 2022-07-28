@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 /*****Creation dossiers *****/
 // create new admin
 exports.createDossier = (req, res) => {
+
     const dos = new dossier(req.body);
     console.log('dossierReqData', dos);
     dossier.createDossier(dos, (err, dos) => {
@@ -62,9 +63,9 @@ exports.findAllMatricule = (req, res) => {
 
 // update user
 exports.updateDossier = (req, res) => {
-    const userReqData = new dossier(req.body);
-    console.log('userReqData update', userReqData);
-    dossier.updateDossier(req.params.idc, userReqData, (err, user) => {
+    const dossierReqData = new dossier(req.body);
+    console.log('dossierReqData update', dossierReqData);
+    dossier.updateDossier(req.params.id, dossierReqData, (err, user) => {
         if (err)
             res.send(err);
         res.json({ status: true, message: 'dossier updated Successfully' })
@@ -113,7 +114,7 @@ exports.getDossierByID = (req, res) => {
         }
         else {
             console.log('Dossier', dossier);
-            res.send( JSON.stringify({ status: 200, error: null, response: dossier }) );
+            res.send(dossier);
         }
     })
   

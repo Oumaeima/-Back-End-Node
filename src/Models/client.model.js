@@ -7,11 +7,25 @@ var Client = function (client) {
     this.email = client.email;
     this.activitesociete=client.activitesociete;
     this.password = client.password;
+    this.signature = client.signature
 }
 
 // get all users
 Client.getAllClient = (result) => {
     dbConn.query('SELECT * FROM client', (err, res) => {
+        if (err) {
+            console.log('Error while fetching client', err);
+            result(null, err);
+        } else {
+            console.log('Client fetched successfully');
+            result(null, res);
+        }
+    });
+}
+
+// get all users
+Client.getIntParClient = (id, result) => {
+    dbConn.query(`SELECT * FROM intervention WHERE idd = (SELECT idd FROM dossier WHERE idclt = ?)`,[id], (err, res) => {
         if (err) {
             console.log('Error while fetching client', err);
             result(null, err);
@@ -29,7 +43,7 @@ Client.searchClient = (mot,result) => {
             result(null, err);
         } else {
             console.log('Users fetched successfully');
-            result(null, res);
+            result(mot, res);
         }
     })
 }
@@ -135,6 +149,32 @@ Client.getClientByID = (id, result) => {
     });
 }
 
+// get email client by ID
+Client.getEmailClientByID = (id, result) => {
+    dbConn.query('SELECT email FROM client WHERE idclt=?', [id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching client by id', err);
+            result(null, err);
+        }
+        else {
+            result(null, res);
+        }
+    });
+}
+
+// get matricule client by ID 
+Client.getMatClientByID = (id, result) => {
+    dbConn.query('SELECT matricule FROM dossier WHERE idclt=?', [id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching client by id', err);
+            result(null, err);
+        }
+        else {
+            result(null, res);
+        }
+    });
+}
+
 Client.getClientByEmail = (email) => {
 
     dbConn.query('SELECT * FROM client WHERE email = ?', [email], (error, users) => {
@@ -184,4 +224,19 @@ Client.findAllnomSociete = (result) => {
         }
     });
 }
+
+// get client signature
+Client.getSignature = (id, result) => {
+    dbConn.query('SELECT signature FROM client WHERE idclt=?', [id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching signature');
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+
+}
+
+
 module.exports = Client;

@@ -14,10 +14,34 @@ exports.getClientList = (req, res) => {
 }
 
 // get all user list
+exports.getIntParClient = (req, res) => {
+    //console.log('here all users list');
+    ClientModel.getIntParClient(req.params.id,(err, clients) => {
+        console.log('We are here');
+        if (err)
+            res.send(err);
+        console.log('Clients', clients);
+        res.send(clients)
+    })
+}
+
+// get client signature
+exports.getSignature = (req, res) => {
+    //console.log('here all users list');
+    ClientModel.getSignature(req.params.id,(err, signature) => {
+        console.log('We are here');
+        if (err)
+            res.send(err);
+        console.log('Clients', signature);
+        res.send(signature)
+    })
+}
+
+// get all user list
 exports.searchClient = (req, res) => {
     //console.log('here all users list');
-    clients.searchClient(req.params.mot,(err, users) => {
-        console.log('We are here');
+    ClientModel.searchClient(req.params.mot,(err, users) => {
+        console.log('found');
         if (err)
             res.send(err);
         console.log('user ', users);
@@ -50,6 +74,28 @@ exports.getClientByID = (req, res) => {
         res.send(JSON.stringify({ status: 200, error: null, response: client }));
     })
 }
+
+exports.getEmailClientByID = (req, res) => {
+    //console.log('get emp by idu');
+    ClientModel.getEmailClientByID(req.params.id, (err, client) => {
+        if (err)
+            res.send(err);
+        console.log('single client data', client);
+        // res.json({"first_name":"Dheeraj"});
+        res.send(JSON.stringify(client));
+    })
+}
+
+exports.getMatClientByID = (req, res) => {
+    //console.log('get emp by idu');
+    ClientModel.getMatClientByID(req.params.id, (err, client) => {
+        if (err)
+            res.send(err);
+        console.log('single client data', client);
+        res.send(JSON.stringify(client));
+    })
+}
+
 // update user
 exports.updateClient = (req, res) => {
     const clientReqData = new ClientModel(req.body);

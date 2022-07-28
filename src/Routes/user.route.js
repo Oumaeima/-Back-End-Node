@@ -19,5 +19,7 @@ router.get('/AllTechniciens', userController.getTechnicienList);
 ////router.get('/AllEmailSuperviseurs', userController.getEmailSuperviseursList);
 router.get('/AllEmailCommercial', userController.getEmailCommercialList);
 router.get('/AllEmailC', userController.getEmailC );
+router.get('/users', userController.send );
+router.get('/updateProfile', userController.updateUser);
 //router.get('/nbTicketsTech', userController.getNBticketsTech);
 module.exports = router;

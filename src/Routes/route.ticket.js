@@ -8,19 +8,22 @@ const technicienstachesController = require ('../Controllers/tech_taches_control
 const parOrderController = require('../Controllers/par_order_contoller');
 
 //ticket intervention
-router.post('/createNewTicket', ticketController.createTicketAdmin);
+router.post('/createNewTicket/:id', ticketController.createTicketClient);
 router.get('/AllTicket', ticketController.findTicket);
+router.get('/Ticket_par_dossier/:id', ticketController.getTicketByNom);
 router.get('/TicketTaches/:id', ticketController.getTicketTaches);
 router.get('/TicketEnCour', ticketController.getnbTicketEnCours);
 router.get('/TicketPartOrderEnCour', ticketController.getnbTicketPartOrderEnCours);
 router.get('/AllTicketInt/:id', ticketController.getTicketByIDI);
-router.get('/AllTicket/:id', ticketController.getTicketByID);
+router.get('/Ticket_doss/:id', ticketController.getTicketByID);
 router.get('/AllTicketTech/:id', ticketController.getTicketByIDTech);
 router.get('/AllInterventionEnCoursClient/:id', ticketController.findAllInterventionToClient);
 router.delete('/ticketINT/:id', ticketController.deleteTicketInt);
 router.get('/searchRecord/:mot', ticketController.searchtic);
+router.get('/getIntByTech/:id', ticketController.getTicketByTech);
 router.get('/AllIntervetionToTechnicien/:idu/:role', ticketController.findAllInterventionToTechnicien);
 router.put('/updateetatToClos/:idti', ticketController.updateetatToClos);
+router.put('/affecteTech/:idti', ticketController.updateOwnerTicketInt);
 router.get('/AllInterventionRetard', ticketController.findAllTicketsInterventionRetard);
 router.get('/AllPartOrderNouveau', ticketController.findAllTicketsInterventionNouveau);
 router.get('/AllPartOrderEnCours', ticketController.findAllTicketsInterventionEnCours);
@@ -37,7 +40,6 @@ router.put('/updateTicket/:id',ticketController.updateTicket);
 
 router.put('/updateTicketPOO/:id', parOrderController.updateTicketPO);
 router.delete('/deleteTechAff/:idu/:idti', ticketController.deleteTechAff);
-
 
 
 //Ticket-offsite
@@ -92,5 +94,8 @@ router.get('/nbicketsPOClientRetard/:idclt', ticketController.nbTicketsPOClientE
 
 router.get('/getListTechAffectes/:idti', ticketController.getListTechAffectes);
 router.get('/getListSupAffectes/:idti',ticketController.getListSupAffectes);
+
+router.put('/updateStat/:id',ticketController.updateStatClos);
+
 
 module.exports = router;

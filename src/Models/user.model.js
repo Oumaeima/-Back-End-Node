@@ -50,7 +50,7 @@ User.getUserByName = (nom, result) => {
 }
 
 // create new user
-/*User.createUser = (userReqData, result) => {
+User.createUser = (userReqData, result) => {
     dbConn.query('INSERT INTO users SET ?', userReqData, (err, res) => {
         if (err) {
             console.log('Error while inserting data');
@@ -60,7 +60,7 @@ User.getUserByName = (nom, result) => {
             result(null, res)
         }
     });
-}*/
+}
 
 User.searchUser = (mot,result) => {
     dbConn.query(`SELECT * FROM users WHERE nom LIKE ? OR prenom LIKE ? OR poste LIKE ? OR tel LIKE ?  OR email LIKE ?  `, ['%' + mot + '%','%' + mot + '%','%' + mot + '%','%' + mot + '%','%' + mot + '%'] ,(err, res) => {

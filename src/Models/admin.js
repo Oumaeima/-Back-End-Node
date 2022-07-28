@@ -69,12 +69,25 @@ admin.CreateAdmin = (data) => {
     // update user
     admin.updateAdmin = (ida, userReqData, result) => {
         let salt = bcrypt.genSaltSync(10);
-        dbConn.query("UPDATE admin SET nom=? ,prenom=? ,email=?,password=? WHERE ida = ?", [userReqData.nom,userReqData.prenom,userReqData.email, bcrypt.hashSync(userReqData.password, salt), ida], (err, res) => {
+        dbConn.query("UPDATE admin SET nom=? ,prenom=? ,email=? WHERE ida = ?", [userReqData.nom,userReqData.prenom,userReqData.email, ida], (err, res) => {
             if (err) {
                 console.log('Error while updating the admin');
                 result(null, err);
             } else {
                 console.log("user updated successfully");
+                result(null, res);
+            }
+        });
+    }  
+//update Admin Password
+    admin.updateAdminPassword = (ida, userReqData, result) => {
+        let salt = bcrypt.genSaltSync(10);
+        dbConn.query("UPDATE admin SET password=? WHERE ida = ?", [bcrypt.hashSync(userReqData.password, salt), ida], (err, res) => {
+            if (err) {
+                console.log('Error while updating the password');
+                result(null, err);
+            } else {
+                console.log("password updated successfully");
                 result(null, res);
             }
         });

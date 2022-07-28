@@ -105,7 +105,7 @@ partOrder.findAllComEmail= (result) => {
     });
 }
 partOrder.findAllTechEmail= (result) => {
-    dbConn.query('SELECT email FROM users WHERE poste="Technicien"',(err, res) => {
+    dbConn.query('SELECT * FROM users WHERE poste="Technicien"',(err, res) => {
         if (err) {
             console.log('Error');
         }
