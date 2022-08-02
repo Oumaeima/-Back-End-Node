@@ -49,6 +49,10 @@ app.use('/admin', admindossier);
 const TicketRoutes =require('./src/Routes/route.ticket');
 app.use('/ticket',TicketRoutes); 
 
+//mailing routes
+const mail =require('./src/Routes/route.mail');
+app.use('/mailing',mail); 
+
 // listen to the port
 app.listen(port, () => {
     console.log(`Express is running at port ${port}`);

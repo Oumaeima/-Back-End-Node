@@ -217,8 +217,8 @@ intervention.CountTicketsIntervenionStateExpediteur = (result) => {
     });
 }
 
-intervention.updateStateInterventionToEnCours = (idti, result) => {
-    dbConn.query('  UPDATE intervention SET status="en cours" WHERE idti=?  ', [idti], function (err, res) {
+intervention.updateStateResolu = (idti, result) => {
+    dbConn.query('  UPDATE intervention SET status="Résolu" WHERE idti=?  ', [idti], function (err, res) {
         if (err) {
             console.log('Error');
             console.log(err)

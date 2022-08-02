@@ -208,14 +208,13 @@ exports.getTicketByIDI = (req, res) => {
 }
 
 // update ticket to state en cours By technicien
-exports.updateetatToEnCours = (req, res) => {
+exports.updateStateResolu = (req, res) => {
     const userReqData = new ticket(req.body);
     console.log('userReqData update', userReqData);
-    ticket.updateStateInterventionToEnCours(req.params.idti, userReqData, (err, user) => {
+    ticket.updateStateResolu(req.params.idti, userReqData, (err, user) => {
         if (err)
-            res.send(err);
-        res.json({ status: true, message: 'ticket  updated Successfully' })
-        console.log(user);
+                res.send(err);
+            res.json({ status: true, message: 'ticket updated Successfully' })
     })
 }
 

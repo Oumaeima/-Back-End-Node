@@ -56,7 +56,7 @@ router.post('/affecterTicketSuperviseur/:idti', ticketsuperviceurController.affe
 router.post('/tachesrealisees/:idti', technicienstachesController.tachesRealisees);
 
 //update etat ticket
-router.put('/updateToEnCours/:idti', ticketController.updateetatToEnCours);
+router.put('/updateStateResolu/:idti', ticketController.updateStateResolu);
 router.put('/updateToResolu/:idti', ticketController.updateetatToResolu);
 router.put('/updateToClos/:idti', ticketController.updateetatToClos);
 // creation ticket Par Order
