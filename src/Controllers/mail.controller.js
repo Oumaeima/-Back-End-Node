@@ -55,10 +55,12 @@ exports.sendMailsUser = (req, res)=>{
     let Object = req.body.object
 
     var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        tls: {
-            rejectUnauthorized: false
-        }
+        service: "gmail",
+        auth: {
+            user: process.env.MAIL_USERNAME,
+            pass: process.env.MAIL_PASSWORD
+           
+        },
     });
     var message = {
         from: user,// sender address
