@@ -38,7 +38,8 @@ router.get('/nbTicketsInterventionClos', ticketController.CountTicketInterventio
 router.get('/nbTicketsInterventionRetard', ticketController.CountTicketInterventionRetard);
 router.put('/updateTicket/:id',ticketController.updateTicket);
 
-router.put('/updateTicketPOO/:id', parOrderController.updateTicketPO);
+router.put('/updateTicketPO/:id', parOrderController.updateTicketPO);
+router.put('/fermerTicketPO/:id', parOrderController.fermerTicketPO);
 router.delete('/deleteTechAff/:idu/:idti', ticketController.deleteTechAff);
 
 
@@ -59,12 +60,15 @@ router.post('/tachesrealisees/:idti', technicienstachesController.tachesRealisee
 router.put('/updateStateResolu/:idti', ticketController.updateStateResolu);
 router.put('/updateToResolu/:idti', ticketController.updateetatToResolu);
 router.put('/updateToClos/:idti', ticketController.updateetatToClos);
+
 // creation ticket Par Order
-router.post('/createpartOrder', parOrderController.createTicketPartOrder);
+router.post('/createpartOrder/:id', parOrderController.createTicketPartOrder);
 router.delete('/ticketPO/:id', parOrderController.deleteTicketPO);
 router.get('/nbTicketsPartOrderEnCours',parOrderController.CountTicketPartOrderEnCours);
 router.get('/AllTicketOrder',  parOrderController.findTicket);
 router.get('/AllTicketPO/:id',  parOrderController.getTicketByIDPO);
+router.get('/getTicketCom/:id',  parOrderController.getTicketByComm);
+router.get('/getTicket/:id',  parOrderController.getTicketByClient);
 router.get('/AllTicketOrder/:id',  parOrderController.findTicketID);
 router.get('/AllTicketOrderCom/:id',  parOrderController.findTicketIDCom);
 router.get('/AllTicketOrderDetail/:id',  parOrderController.findTicketDetailID);
@@ -82,6 +86,10 @@ router.get('/AllPartOrderEnCours', parOrderController.findAllTicketsPartOrderEnC
 router.get('/AllPartOrderResolu', parOrderController.findAllTicketsPartOrderResolu);
 router.get('/AllPartOrderClos', parOrderController.findAllTicketsPartOrderClos);
 router.get('/EtatPiece/:id', parOrderController.EtatPiece);
+router.put('/updateEtatTicket/:id', parOrderController.updateEtatTicketPO);
+router.put('/updateState2TicketPO/:id', parOrderController.updateState2TicketPO);
+router.put('/updateState3TicketPO/:id', parOrderController.updateState3TicketPO);
+router.put('/updateState4TicketPO/:id', parOrderController.updateState4TicketPO);
 //get All Tiket Tech ou Sup 
 router.get('/AllEmailCom', parOrderController.findemailCom);
 router.get('/AllEmailTech', parOrderController.findemailTech);

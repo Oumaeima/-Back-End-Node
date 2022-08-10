@@ -14,4 +14,5 @@ router.post('/signup', authentification.signup)
 router.post('/createUser', authentification.createuser)
 router.post('/createClient', authentification.createClient)
 router.post('/createAdmin', authentification.createAdmin)
+router.post('/createCommercial', authentification.createCommercial)
 module.exports = router;

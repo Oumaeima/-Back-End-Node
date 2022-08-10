@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer')
 
-exports.sendMails = (req, res)=>{
+exports.sendMails = async function(req, res){
     console.log("req body", req.body);
     let userMail = req.body.userMail
     let userMessage = req.body.userMessage
@@ -49,7 +49,7 @@ exports.sendMails = (req, res)=>{
 // send email from client
 exports.sendMailsUser = (req, res)=>{
     console.log("req body", req.body);
-    let user = req.body.user
+    let user1 = req.body.user1
     let userMail = req.body.userMail
     let userMessage = req.body.userMessage
     let Object = req.body.object
@@ -57,13 +57,13 @@ exports.sendMailsUser = (req, res)=>{
     var transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: process.env.MAIL_USERNAME,
-            pass: process.env.MAIL_PASSWORD
            
+            user: user1,
+            
         },
     });
     var message = {
-        from: user,// sender address
+        from: user1,// sender address
         to: userMail, // list of receivers
         subject: Object, // Subject line
         text: userMessage,

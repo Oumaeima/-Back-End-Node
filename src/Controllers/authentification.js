@@ -161,10 +161,10 @@ exports.signup = async (req, res, next) => {
     console.log(newuser.prenom);
     console.log(newuser.poste);
     console.log(newuser.tel);
-    console.log(newuser.photo);
+    
 
 
-    if (!newuser.nom || !newuser.prenom || !newuser.poste || !newuser.tel || !newuser.photo) {
+    if (!newuser.nom || !newuser.prenom || !newuser.poste || !newuser.tel) {
         console.log("here");
         res.status(401).json({ msg: 'All fields required' });
     } else {
@@ -200,13 +200,12 @@ exports.createuser = async (req, res, next) => {
     let newuser = req.body;
     console.log(newuser.nom);
     console.log(newuser.prenom);
-    console.log(newuser.poste);
     console.log(newuser.tel);
     console.log(newuser.email);
     console.log(newuser.password);
     console.log(newuser.role);
 
-    if (!newuser.nom || !newuser.prenom || !newuser.poste || !newuser.tel  ||!newuser.email || !newuser.password) {
+    if (!newuser.nom || !newuser.prenom || !newuser.tel  ||!newuser.email || !newuser.password) {
         console.log("here");
         res.status(401).json({ msg: 'All fields required' });
     } else {
@@ -222,7 +221,7 @@ exports.createuser = async (req, res, next) => {
 
         sql.getConnection((err, connection) => {
 
-            connection.query(`INSERT INTO users SET ?,role="${newuser.poste}"`, newuser, (err, rows) => {
+            connection.query(`INSERT INTO users SET ?, poste='Technicien', role="Technicien"`, newuser, (err, rows) => {
 
                 if (!rows || rows.length == 0) {
                     res.status(200).json({ msg: "problem" })
@@ -280,7 +279,7 @@ newclient.signature =v3;
             connection.query(`INSERT INTO client SET ?,role="client"`, newclient, (err, rows) => {
 
                 if (!rows || rows.length == 0) {
-                    res.status(200).json({ msg: "probleeeem" })
+                    res.status(200).json({ msg: "probleme" })
                 } else {
                     console.log(rows);
                     connection.query("SELECT idclt from client where email = ?", newclient.email, (err2, rows2) => {
@@ -297,6 +296,52 @@ newclient.signature =v3;
 
 
 
+}
+
+exports.createCommercial = async (req, res, next) => {
+    let newCommercial = req.body;
+    console.log(newCommercial.nom);
+    console.log(newCommercial.prenom);
+    console.log(newCommercial.nomsociete);
+    console.log(newCommercial.tel);
+    console.log(newCommercial.email);
+    console.log(newCommercial.password);
+    console.log(newCommercial.role);
+
+    if (!newCommercial.nom || !newCommercial.prenom || !newCommercial.tel  ||!newCommercial.email || !newCommercial.password || !newCommercial.nomsociete) {
+        console.log("here");
+        res.status(401).json({ msg: 'All fields required' });
+    } else {
+        try {
+            newCommercial.password = await bcrypte.hash(newCommercial.password, 12);
+        } catch (error) {
+            res.status(401).json({ msg: 'some thingwent wrong' });
+            next()
+        }
+
+
+        console.log(newCommercial);
+
+        sql.getConnection((err, connection) => {
+
+            connection.query(`INSERT INTO users SET ?, poste='Commercial', role="Commercial"`, newCommercial, (err, rows) => {
+
+                if (!rows || rows.length == 0) {
+                    res.status(200).json({ msg: "problem" })
+                } else {
+                    console.log(rows);
+                    connection.query("SELECT idu from users where email = ?", newCommercial.email, (err2, rows2) => {
+                        connection.release()
+                        createSendToken(rows2[0].idu, 201, res)
+                    })
+                    // 
+                }
+            })
+        })
+
+
+    }
+  
 }
 
 

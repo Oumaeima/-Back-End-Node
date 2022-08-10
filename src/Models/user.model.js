@@ -6,16 +6,16 @@ var User = function (user) {
     this.poste = user.poste;
     this.tel = user.tel;
     this.email = user.email;
-    this.photo = user.photo;
+    this.nomsociete = user.nomsociete;
     this.password = user.password;
 }
 
 
 
 
-// get all users
+// get all technicien
 User.getAllUsers = (result) => {
-    dbConn.query('SELECT * FROM users', (err, res) => {
+    dbConn.query(' SELECT * FROM users where poste="Technicien" ', (err, res) => {
         if (err) {
             console.log('Error while fetching users', err);
             result(null, err);
@@ -25,6 +25,20 @@ User.getAllUsers = (result) => {
         }
     });
 }
+
+// get all commercial
+User.getCommercialList = (result) => {
+    dbConn.query(' SELECT * FROM users where poste="Commercial" ', (err, res) => {
+        if (err) {
+            console.log('Error while fetching users', err);
+            result(null, err);
+        } else {
+            console.log('Users fetched successfully');
+            result(null, res);
+        }
+    });
+}
+
 User.getAllEmailC = (result) => {
     dbConn.query('SELECT email FROM users where poste="Commerciale"', (err, res) => {
         if (err) {
@@ -107,8 +121,22 @@ User.findAllEmail = (result) => {
 
 // update user
 User.updateUser = (id, userReqData, result) => {
-    let salt = bcrypt.genSaltSync(10);
-    dbConn.query("UPDATE users SET nom=?,prenom=?,poste=?,tel=?,email=? ,password=? WHERE idu = ?", [userReqData.nom, userReqData.prenom, userReqData.poste, userReqData.tel, userReqData.email, bcrypt.hashSync(userReqData.password, salt), id], (err, res) => {
+    
+    dbConn.query("UPDATE users SET nom=?, prenom=?, tel=?, email=? WHERE idu = ?", [userReqData.nom, userReqData.prenom, userReqData.tel, userReqData.email, id], (err, res) => {
+        if (err) {
+            console.log('Error while updating the user');
+            result(null, err);
+        } else {
+            console.log("user updated successfully");
+            result(null, res);
+        }
+    });
+}
+
+// update commercial
+User.updateCommercial = (id, userReqData, result) => {
+    
+    dbConn.query("UPDATE users SET nom=?, prenom=?, nomsociete=?, tel=?, email=? WHERE idu = ?", [userReqData.nom, userReqData.prenom, userReqData.nomsociete, userReqData.tel, userReqData.email, id], (err, res) => {
         if (err) {
             console.log('Error while updating the user');
             result(null, err);

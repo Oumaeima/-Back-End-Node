@@ -207,6 +207,7 @@ exports.getTicketByIDI = (req, res) => {
     })
 }
 
+
 // update ticket to state en cours By technicien
 exports.updateStateResolu = (req, res) => {
     const userReqData = new ticket(req.body);

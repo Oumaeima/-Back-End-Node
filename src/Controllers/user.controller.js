@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer');
 
 
 
-// get all user list
+// get all  technicien
 exports.getUserList = (req, res) => {
     //console.log('here all users list');
     UserModel.getAllUsers((err, users) => {
@@ -16,6 +16,19 @@ exports.getUserList = (req, res) => {
         res.send(users)
     })
 }
+
+// get all commercial
+exports.getCommercialList = (req, res) => {
+    //console.log('here all users list');
+    UserModel.getCommercialList((err, users) => {
+        console.log('We are here');
+        if (err)
+            res.send(err);
+        console.log('Users', users);
+        res.send(users)
+    })
+}
+
 exports.getEmailC = (req, res) => {
     //console.log('here all users list');
     UserModel.getAllEmailC((err, users) => {
@@ -81,6 +94,22 @@ exports.updateUser = (req, res) => {
         res.send(400).send({ success: false, message: 'Please fill all fields' });
     } else {
         UserModel.updateUser(req.params.id, userReqData, (err, user) => {
+            if (err)
+                res.send(err);
+            res.json({ status: true, message: 'User updated Successfully' })
+        })
+    }
+}
+
+// update user
+exports.updateCommercial = (req, res) => {
+    const userReqData = new UserModel(req.body);
+    console.log('userReqData update', userReqData);
+    // check null
+    if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+        res.send(400).send({ success: false, message: 'Please fill all fields' });
+    } else {
+        UserModel.updateCommercial(req.params.id, userReqData, (err, user) => {
             if (err)
                 res.send(err);
             res.json({ status: true, message: 'User updated Successfully' })

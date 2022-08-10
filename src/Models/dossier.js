@@ -150,6 +150,19 @@ dossier.getAllDossier = (result) => {
         }
     });
 }
+
+dossier.getDossier = (result) => {
+    dbConn.query('SELECT nomsociete FROM dossier', (err, res) => {
+        if (err) {
+            console.log('Error while fetching dossier', err);
+            result(null, err);
+        } else {
+            console.log('dossier fetched successfully');
+            result(null, res);
+        }
+    });
+}
+
 dossier.findEmailSociete = (idclt, result) => {
     dbConn.query('SELECT email FROM client where idclt =?  ', [idclt], function (err, res) {
         if (err) {

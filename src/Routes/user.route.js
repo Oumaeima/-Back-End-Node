@@ -7,11 +7,13 @@ const userController = require('../Controllers/user.controller');
 
 /*****User ****/
 router.get('/AllUser', userController.getUserList);
+router.get('/AllCommercial', userController.getCommercialList);
 router.get('/:id', userController.getUserByID);
 //router.get('/searchRecord/:nom', userController.getUserByName);
 router.get('/searchUser/:mot', userController.searchUser);
 router.post('/', userController.createNewUser);
 router.put('/:id', userController.updateUser);
+router.put('/updateCommercial/:id', userController.updateCommercial);
 router.delete('/delete/:id', userController.deleteUser);
 router.get('/AllEmail', userController.getEmailList);
 router.get('/AllEmailTechniciens', userController.getEmailTechnicienList);

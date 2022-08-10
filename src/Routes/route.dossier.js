@@ -3,6 +3,7 @@ const router = express.Router();
 const dossierController = require('../Controllers/dossier');
 /***** dossier****/
 router.get('/getDossierList', dossierController.getDossierList);
+router.get('/getDossier', dossierController.getDossier);
 router.post('/createNewDossier', dossierController.createDossier);
 router.delete('/:id', dossierController.deletedossier);
 router.put('/:id', dossierController.updateDossier);

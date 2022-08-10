@@ -35,7 +35,7 @@ exports.findEmailSociete = (req, res) => {
         }
     })
 }
-// liste of clients 
+// liste of dossier 
 exports.getDossierList = (req, res) => {
     //console.log('here all users list');
     dossier.getAllDossier((err, dossiers) => {
@@ -46,6 +46,20 @@ exports.getDossierList = (req, res) => {
         res.send(dossiers)
     })
 }
+
+
+// liste of dossier name 
+exports.getDossier = (req, res) => {
+    //console.log('here all users list');
+    dossier.getDossier((err, dossiers) => {
+        console.log('We are here');
+        if (err)
+            res.send(err);
+        console.log('dossier', dossiers);
+        res.send(dossiers)
+    })
+}
+
 exports.findAllMatricule = (req, res) => {
     //console.log('here all user list');
     dossier.findAllMatricule((err, matricules) => {
