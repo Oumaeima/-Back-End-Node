@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 require("dotenv").config();
 
 
@@ -10,6 +11,7 @@ const buildPath = path.join(__dirname, '..', 'build');
 app.use(express.json());
 app.use(express.static(buildPath));
 app.use(cors())
+app.use(fileUpload());
 const bcrypt = require('bcrypt');
 // setup the server port
 const port = process.env.PORT || 5000;
@@ -52,6 +54,11 @@ app.use('/ticket',TicketRoutes);
 //mailing routes
 const mail =require('./src/Routes/route.mail');
 app.use('/mailing',mail); 
+
+//offre routes
+const offre =require('./src/Routes/route.offre');
+app.use('/offre',offre); 
+
 
 // listen to the port
 app.listen(port, () => {

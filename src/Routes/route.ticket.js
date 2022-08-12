@@ -64,6 +64,7 @@ router.put('/updateToClos/:idti', ticketController.updateetatToClos);
 // creation ticket Par Order
 router.post('/createpartOrder/:id', parOrderController.createTicketPartOrder);
 router.delete('/ticketPO/:id', parOrderController.deleteTicketPO);
+router.get('/ticketD/:id',parOrderController.getTicketByDossier);
 router.get('/nbTicketsPartOrderEnCours',parOrderController.CountTicketPartOrderEnCours);
 router.get('/AllTicketOrder',  parOrderController.findTicket);
 router.get('/AllTicketPO/:id',  parOrderController.getTicketByIDPO);
@@ -90,6 +91,7 @@ router.put('/updateEtatTicket/:id', parOrderController.updateEtatTicketPO);
 router.put('/updateState2TicketPO/:id', parOrderController.updateState2TicketPO);
 router.put('/updateState3TicketPO/:id', parOrderController.updateState3TicketPO);
 router.put('/updateState4TicketPO/:id', parOrderController.updateState4TicketPO);
+router.put('/addOffre/:id', parOrderController.addOffre);
 //get All Tiket Tech ou Sup 
 router.get('/AllEmailCom', parOrderController.findemailCom);
 router.get('/AllEmailTech', parOrderController.findemailTech);

@@ -2,6 +2,10 @@ var dbConn = require('../../Config/db.config');
 const bcrypt = require('bcrypt');
 const date = require('date-and-time')
 const nodemailer = require('nodemailer')
+const express = require("express");
+const fileupload = require("express-fileupload");
+const cors = require("cors");
+const bodyParser = require('body-parser');
 
 var partOrder = function (partOrder) {
 
@@ -12,7 +16,6 @@ var partOrder = function (partOrder) {
     this.status = partOrder.status;
     this.commercial = partOrder.commercial;
     this.etatpiece = partOrder.etatpiece;
-    this.offre = partOrder.offre;
     this.idd = partOrder.idd;
     this.trackingNumber = partOrder.serialNumber;   
 }
@@ -46,7 +49,7 @@ partOrder.createPartOrder= (id,data) => {
         let owner
         let commercial
         dbConn.query(
-            `INSERT INTO partorder  SET nomCommande="${data.nomCommande}", description ="${data.description}", owner =(SELECT email FROM client WHERE idclt="${id}"), date="${value}", status="nouveau", commercial = (select email from users where poste="Commercial" AND nomsociete =(select nomsociete from client where idclt="${id}") ) , etatpiece="en cours de traitement", offre="${data.offre}", idd = (select idd from dossier where idclt ="${id}" ), trackingNumber="${v3}"`, [userItem],
+            `INSERT INTO partorder  SET nomCommande="${data.nomCommande}", description ="${data.description}", owner =(SELECT email FROM client WHERE idclt="${id}"), date="${value}", status="nouveau", commercial = (select email from users where poste="Commercial" AND nomsociete =(select nomsociete from client where idclt="${id}") ) , etatpiece="en cours de traitement", idd = (select idd from dossier where idclt ="${id}" ), trackingNumber="${v3}"`, [userItem],
             function (err, rows) {
                 if (err) {
                     reject(false)
@@ -494,6 +497,32 @@ partOrder.updateState4TicketPO = (id, result) => {
             result(null, err);
         } else {
             console.log("ticket updated successfully");
+            result(null, res);
+        }
+    });
+}
+
+// ajouter offre par le commercial
+partOrder.addOffre = (id, ticketReqData, result) => {
+
+    dbConn.query(`UPDATE partorder SET offre=? WHERE idti=?`,[ticketReqData.offre, id], (err, res) => {
+        if (err) {
+            console.log('Error while updating the offre');
+            result(null, err);
+        } else {
+            console.log("ticket updated successfully");
+            result(null, res);
+        }
+    });
+}
+
+//get ticket by id dossier
+partOrder.getTicketByDossier = (id, result) => {
+    dbConn.query('SELECT * FROM partorder WHERE idd=?', [id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching matricule by id', err);
+            result(null, err);
+        } else {
             result(null, res);
         }
     });
