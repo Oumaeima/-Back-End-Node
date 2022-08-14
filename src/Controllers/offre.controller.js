@@ -29,28 +29,45 @@ exports.index = function(req, res){
         var file = req.files.uploaded_pdf
         var img_name=file.name;
          if(file.mimetype == "application/pdf"){
-                                
-              file.mv('../offres'+file.name, function(err) {
-                            
-                  if (err)
-                    return res.status(500).send(err);
-                    offre.createOffre(req.params.id, img_name, (err, tic) => {
-                        if (err)
-                            res.send(err);
-                        else {
-                            res.send(tic)
-                            res.json({ status: true, message: 'offre Created Successfully' })
-                        }
-                    })
-                            
-                       });
+            if(!req.files){
+                console.log("No Files Found");
+            }else{
+                
+                console.log(img_name);
+                offre.createOffre(req.params.id, [img_name], (err, tic) => {
+                    if (err)
+                        res.send(err);
+                    else {
+                        res.send(tic)
+                        res.json({ status: true, message: 'offre Created Successfully' })
+                    }
+                })            
+            }                   
+             
           } else {
-            message = "This format is not allowed , please upload file with '.png','.gif','.jpg'";
+            message = "This format is not allowed , please upload file with '.pdf' extension";
             
           }
    } else {
       console.log("error");
    }
 };
+
+
+
+
+exports.getOffre = (req, res) => {
+    offre.getOffre(req.params.id, (err, users) => {
+        console.log('offre');
+        if (err) {
+            res.send(err);
+        }
+        else {
+            console.log('offre', users[0].offre);
+            res.send(users)
+            
+        }
+    })
+}
 
 

@@ -22,4 +22,16 @@ offre.createOffre= (id,data) => {
     }); 
 };
 
+offre.getOffre = (id,result) => {
+    dbConn.query('SELECT offre FROM offre WHERE ticket_id=?',[id], function (err, res) {
+        if (err) {
+            console.log('Error');
+        }
+        else {
+            result(null, res);
+            //console.log(result);
+        }
+    });
+}
+
 module.exports = offre
