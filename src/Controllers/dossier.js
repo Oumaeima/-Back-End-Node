@@ -147,3 +147,15 @@ exports.findClientsDossiers = (req, res) => {
         }
     })
 }
+
+//count number of dossier
+exports.countNbDossier = (req, res) => {
+    //console.log('here all users list');
+    dossier.countNbDossier((err, dossiers) => {
+        console.log('We are here');
+        if (err)
+            res.send(err);
+        console.log('dossier', dossiers);
+        res.send(dossiers)
+    })
+}

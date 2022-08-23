@@ -79,7 +79,7 @@ exports.getUserByID = (req, res) => {
             res.send(err);
         console.log('single user data', user);
         // res.json({"first_name":"Dheeraj"});
-        res.send(JSON.stringify({ status: 200, error: null, response: user }));
+        res.send(user);
     })
 }
 
@@ -256,6 +256,28 @@ exports.getNBticketsTech = (req, res) => {
         console.log('nb ', nb);
         res.send(nb)
     }) 
+}
+
+//count number of technicien
+exports.CountNbTechnicien = (req, res) => {
+    UserModel.CountNbTechnicien((err, users) => {
+        console.log('We are here');
+        if (err)
+            res.send(err);
+        console.log('Users', users);
+        res.send(users)
+    })
+}
+
+//count number of commercial
+exports.countNbCommercial = (req, res) => {
+    UserModel.countNbCommercial((err, users) => {
+        console.log('We are here');
+        if (err)
+            res.send(err);
+        console.log('Users', users);
+        res.send(users)
+    })
 }
 
 

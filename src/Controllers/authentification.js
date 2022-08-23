@@ -3,6 +3,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken')
 const bcrypte = require('bcrypt')
 const nodemailer = require('nodemailer');
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('myTotallySecretKey');
 const creetoken = (id) => {
     return jwt.sign({ id }, "The word of tokens", {
         expiresIn: "30d"
@@ -33,8 +35,6 @@ const createSendToken = (users, statusCode, res) => {
         }
     });
 };
-
-
 
 
 exports.login = async (req, res, next) => {
@@ -250,9 +250,11 @@ exports.createClient = async (req, res, next) => {
     console.log(newclient.tel);
     console.log(newclient.email);
     console.log(newclient.signature);
-    
     console.log(newclient.password);
     console.log(newclient.role);
+    
+
+    let email, signature, password
 
     if (!newclient.nom || !newclient.prenom || !newclient.nomsociete || !newclient.email || !newclient.tel || !newclient.password) {
         console.log("here");
@@ -265,7 +267,7 @@ exports.createClient = async (req, res, next) => {
             let v3 = ('OPM'.concat(v1, v2));
 newclient.signature =v3;
         try {
-            newclient.password = await bcrypte.hash(newclient.password, 12);
+            newclient.password = cryptr.encrypt(newclient.password);
         } catch (error) {
             res.status(401).json({ msg: 'some thingwent wrong' });
             next()
@@ -286,7 +288,45 @@ newclient.signature =v3;
                         connection.release()
                         createSendToken(rows2[0].idclt, 201, res)
                     })
-                    // 
+                    connection.query('SELECT email, password, signature FROM client WHERE email = ?', newclient.email, (err, res) => {
+                        if (err) {
+                            console.log('Error while fetching id client', err);
+                            
+                        } else {
+                            const decryptedString = cryptr.decrypt(res[0].password);
+                            email = res[0].email
+                            signature = res[0].signature
+                            password = decryptedString
+                            console.log("email client "+email);
+                            console.log("signature client "+signature);
+                            console.log("password client "+password);
+                            var transporter = nodemailer.createTransport({
+                                service: 'gmail',
+                                auth: {
+                                    user: process.env.MAIL_USERNAME,
+                                    pass: process.env.MAIL_PASSWORD
+                                },
+                            });
+                            var message = {
+                                from: process.env.MAIL_USERNAME,// sender address
+                                to: email, // list of receivers
+                                subject: "Coordonnées de votre compte de l'application opm", // Subject line
+                                html: `
+                                <div style="padding:10px;border-style: ridge">
+                                <h3>Details</h3>
+                                <ul>
+                                    Voici les Coordonnées d'accées à votre compte d'application OPM:
+                                    <li>Email : ${email}</li>
+                                    <li>Mot de passe : ${password}</li>
+                                    <li>Signture : ${signature}</li>
+                                </ul>
+                                `
+                            };
+                            transporter.sendMail(message) 
+                        }
+                    }
+                    
+                    );
                 }
             })
         })

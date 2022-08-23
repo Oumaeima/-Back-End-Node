@@ -71,7 +71,7 @@ exports.getClientByID = (req, res) => {
             res.send(err);
         console.log('single client data', client);
         // res.json({"first_name":"Dheeraj"});
-        res.send(JSON.stringify({ status: 200, error: null, response: client }));
+        res.send(client);
     })
 }
 
@@ -122,6 +122,18 @@ exports.deleteClient = (req, res) => {
 exports.getnomSocieteList = (req, res) => {
     //console.log('here all users list');
     ClientModel.findAllnomSociete((err, clients) => {
+        console.log('We are here');
+        if (err)
+            res.send(err);
+        console.log('Clients', clients);
+        res.send(clients)
+    })
+}
+
+// get number of clients
+exports.getNbClient = (req, res) => {
+    //console.log('here all users list');
+    ClientModel.getNbClient((err, clients) => {
         console.log('We are here');
         if (err)
             res.send(err);

@@ -123,7 +123,7 @@ exports.getnbTicketEnCours = (req, res) => {
             res.send(err);
         console.log('single user data', tickets);
         // res.json({"first_name":"Dheeraj"});
-        res.send( tickets);
+        res.send(tickets);
     })
 }
 exports.getnbTicketPartOrderEnCours = (req, res) => {
@@ -395,6 +395,26 @@ exports.CountTicketInterventionRetard = (req, res) => {
     res.send( tickets);
     })
 }
+exports.CountTicketsIntervenion = (req, res) => {
+
+    ticket.CountTicketsIntervenion( (err, tickets) => {
+        if (err)
+        res.send(err);
+    console.log('single user data', tickets);
+    // res.json({"first_name":"Dheeraj"});
+    res.send( tickets);
+    })
+}
+exports.CountTicketsIntReslou = (req, res) => {
+
+    ticket.CountTicketsIntReslou( (err, tickets) => {
+        if (err)
+        res.send(err);
+    console.log('single user data', tickets);
+    // res.json({"first_name":"Dheeraj"});
+    res.send( tickets);
+    })
+}
 exports.nbTicketsClientEnCours = (req, res) => {
     ticket.nbTicketsClientEnCours(req.params.idclt,(err, tickets) => {
         if (err)
@@ -430,7 +450,6 @@ exports.getListTechAffectes= (req, res) => {
 }
 exports.getListSupAffectes= (req, res) => {
     
-    
     ticket.getListSupAffectes(req.params.idti, (err, ticket) => {
         if (err)
             res.send(err);
@@ -447,3 +466,100 @@ exports.deleteTechAff = (req, res) => {
         res.json({ success: true, message: 'ticket deleted successully!' });
     })
 }
+
+exports.CountTicketsByClient= (req, res) => {
+    ticket.CountTicketsByClient(req.params.id, (err, ticket) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', ticket);
+        
+        res.send( ticket);
+    })
+}
+
+exports.CountClosByClient= (req, res) => {
+    ticket.CountClosByClient(req.params.id, (err, ticket) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', ticket);
+        
+        res.send( ticket);
+    })
+}
+
+exports.CountEnCoursByClient= (req, res) => {
+    ticket.CountEnCoursByClient(req.params.id, (err, ticket) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', ticket);
+        
+        res.send( ticket);
+    })
+}
+
+exports.CountResoluByClient= (req, res) => {
+    ticket.CountResoluByClient(req.params.id, (err, ticket) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', ticket);
+        
+        res.send( ticket);
+    })
+}
+
+// count ticket by technicien
+exports.CountTicketByTech= (req, res) => {
+    ticket.CountTicketByTech(req.params.id, (err, ticket) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', ticket);
+        
+        res.send( ticket);
+    })
+}
+
+// count ticket "en cours" by technicien
+exports.CountEnCoursByTech= (req, res) => {
+    ticket.CountEnCoursByTech(req.params.id, (err, ticket) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', ticket);
+        
+        res.send( ticket);
+    })
+}
+
+// count ticket "resolu" by technicien
+exports.CountResoluByTech= (req, res) => {
+    ticket.CountResoluByTech(req.params.id, (err, ticket) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', ticket);
+        
+        res.send( ticket);
+    })
+}
+
+// count nb ticket "Opération site régulière" by technicien
+exports.CountIntType1ByTech= (req, res) => {
+    ticket.CountIntType1ByTech(req.params.id, (err, ticket) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', ticket);
+        
+        res.send( ticket);
+    })
+}
+
+// count nb ticket "Opération et gestion" by technicien
+exports.CountIntType2ByTech= (req, res) => {
+    ticket.CountIntType2ByTech(req.params.id, (err, ticket) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', ticket);
+        
+        res.send( ticket);
+    })
+}
+
+

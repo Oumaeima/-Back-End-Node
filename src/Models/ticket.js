@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 
 var intervention = function (intervention) {
 
+    this.type = intervention.type;
     this.sla = intervention.sla;
     this.owner = intervention.owner;
     this.datedeb = intervention.datedeb;
@@ -12,16 +13,6 @@ var intervention = function (intervention) {
     this.status = intervention.status;   
     this.matricule = intervention.matricule;
     this.idd = intervention.idd;
-}
-
-var user = function(user){
-    this.nom = user.nom;
-    this.prenom = user.prenom;
-    this.poste = user.poste;
-    this.tel = user.tel;
-    this.email = user.email;
-    this.photo = user.photo;   
-    this.role = user.role;
 }
 
 
@@ -33,6 +24,7 @@ intervention.createTicketClient = (id,data) => {
         try {
             
             let userItem = {
+                type: data.type,
                 sla: data.sla,
                 owner: data.owner,
                 datedeb: data.datedeb,
@@ -44,7 +36,7 @@ intervention.createTicketClient = (id,data) => {
             };
             
             dbConn.query(
-                `INSERT INTO intervention SET sla ="${data.sla}", owner =(SELECT email FROM client WHERE idclt="${id}"), datedeb = "${data.datedeb}", dateClos = "${data.dateClos}",taches = "${data.taches}", idd = (select idd from dossier where idclt ="${id}" ) ,status = "nouveau"`, [userItem],
+                `INSERT INTO intervention SET type ="${data.type}", sla ="${data.sla}", owner =(SELECT email FROM client WHERE idclt="${id}"), datedeb = "${data.datedeb}", dateClos = "${data.dateClos}",taches = "${data.taches}", idd = (select idd from dossier where idclt ="${id}" ) ,status = "nouveau"`, [userItem],
                 function (err, rows) {
                     if (err) {
                         reject(false)
@@ -59,7 +51,7 @@ intervention.createTicketClient = (id,data) => {
 
 intervention.updateTicketI = (id, ticketReqData, result) => {
 
-    dbConn.query("UPDATE intervention SET sla=?, owner=? ,datedeb=?, dateClos=? ,taches=?, status=? WHERE idti = ?", [ticketReqData.sla, ticketReqData.owner, ticketReqData.datedeb, ticketReqData.dateClos, ticketReqData.taches, ticketReqData.status, id], (err, res) => {
+    dbConn.query("UPDATE intervention SET type=?, sla=?, owner=? ,datedeb=?, dateClos=? ,taches=?, status=? WHERE idti = ?", [ticketReqData.type, ticketReqData.sla, ticketReqData.owner, ticketReqData.datedeb, ticketReqData.dateClos, ticketReqData.taches, ticketReqData.status, id], (err, res) => {
         if (err) {
             console.log('Error while updating the ticket');
             result(null, err);
@@ -148,7 +140,7 @@ intervention.getTicketTaches = (id, result) => {
     });
 }
 intervention.getnbEnCours = ( result) => {
-    dbConn.query('SELECT count(idti) as nb FROM intervention where etat="en cours"', (err, res) => {
+    dbConn.query('SELECT count(idti) as nb FROM intervention where status="en cours"', (err, res) => {
         if (err) {
             console.log('Error while fetching matricule by id', err);
             result(null, err);
@@ -369,7 +361,17 @@ intervention.CountTicketsClientEnCours = (result) => {
 
 //admin
 intervention.CountTicketsInterventionClos = (result) => {
-    dbConn.query('SELECT count(idti) as nbclos FROM intervention where etat="clos"', function (err, res) {
+    dbConn.query('SELECT count(idti) as nbclos FROM intervention where status="Clos"', function (err, res) {
+        if (err) {
+            console.log('Error while fetching matricule by id', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+intervention.CountTicketsIntReslou = (result) => {
+    dbConn.query('SELECT count(idti) as nbr FROM intervention where status="Résolu"', function (err, res) {
         if (err) {
             console.log('Error while fetching matricule by id', err);
             result(null, err);
@@ -380,6 +382,17 @@ intervention.CountTicketsInterventionClos = (result) => {
 }
 intervention.CountTicketsIntervenionEnCours = (result) => {
     dbConn.query('SELECT count(idti) as nbc FROM intervention where etat="en cours"', function (err, res) {
+        if (err) {
+            console.log('Error while fetching matricule by id', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+
+intervention.CountTicketsIntervenion = (result) => {
+    dbConn.query('SELECT count(idti) as nball FROM intervention', function (err, res) {
         if (err) {
             console.log('Error while fetching matricule by id', err);
             result(null, err);
@@ -481,5 +494,130 @@ intervention.delete_TechAff = (idti,idu, result) => {
 
 }
 
+intervention.CountTicketsByClient = (id,result) => {
+    
+    dbConn.query(`SELECT count(idti) as intT from intervention WHERE idd=(select idd from dossier where idclt=?)`,[id],function (err, res) {
+        if (err) {
+            console.log('Error while updating the ticket');
+            result(null, err);
+        } else {
+            console.log("ticket updated successfully");
+            result(null, res);
+        }
+    });
+
+}
+
+intervention.CountClosByClient = (id,result) => {
+    
+    dbConn.query(`SELECT count(idti) as intClos from intervention WHERE idd=(select idd from dossier where idclt=?) AND status="Clos"`,[id],function (err, res) {
+        if (err) {
+            console.log('Error while updating the ticket');
+            result(null, err);
+        } else {
+            console.log("ticket updated successfully");
+            result(null, res);
+        }
+    });
+
+} 
+
+intervention.CountEnCoursByClient = (id,result) => {
+    
+    dbConn.query(`SELECT count(idti) as intC from intervention WHERE idd=(select idd from dossier where idclt=?) AND status="en cours"`,[id],function (err, res) {
+        if (err) {
+            console.log('Error while updating the ticket');
+            result(null, err);
+        } else {
+            console.log("ticket updated successfully");
+            result(null, res);
+        }
+    });
+
+}
+
+intervention.CountResoluByClient = (id,result) => {
+    
+    dbConn.query(`SELECT count(idti) as intR from intervention WHERE idd=(select idd from dossier where idclt=?) AND status="Résolu"`,[id],function (err, res) {
+        if (err) {
+            console.log('Error while updating the ticket');
+            result(null, err);
+        } else {
+            console.log("ticket updated successfully");
+            result(null, res);
+        }
+    });
+
+}
+
+// count nb ticket by technicien
+intervention.CountTicketByTech = (id,result) => {
+    
+    dbConn.query(`SELECT count(idti) as intT from intervention WHERE owner=(select email from users where idu=?)`,[id],function (err, res) {
+        if (err) {
+            console.log('Error while updating the ticket');
+            result(null, err);
+        } else {
+            console.log("ticket updated successfully");
+            result(null, res);
+        }
+    });
+}
+
+// count nb ticket "en cours" by technicien
+intervention.CountEnCoursByTech = (id,result) => {
+    
+    dbConn.query(`SELECT count(idti) as intC from intervention WHERE owner=(select email from users where idu=?) AND status="en cours"`,[id],function (err, res) {
+        if (err) {
+            console.log('Error while fetching the ticket');
+            result(null, err);
+        } else {
+            console.log("ticket fetched successfully");
+            result(null, res);
+        }
+    });
+}
+
+// count nb ticket "Résolu" by technicien
+intervention.CountResoluByTech = (id,result) => {
+    
+    dbConn.query(`SELECT count(idti) as intR from intervention WHERE owner=(select email from users where idu=?) AND status="Résolu"`,[id],function (err, res) {
+        if (err) {
+            console.log('Error while fetching the ticket');
+            result(null, err);
+        } else {
+            console.log("ticket fetched successfully");
+            result(null, res);
+        }
+    });
+}
+
+// count nb ticket "Opération site régulière" by technicien
+intervention.CountIntType1ByTech = (id,result) => {
+    
+    dbConn.query(`SELECT count(idti) as intType1 from intervention WHERE owner=(select email from users where idu=?) AND type = "Opération site régulière"`,[id],function (err, res) {
+        if (err) {
+            console.log('Error while fetching the ticket');
+            result(null, err);
+        } else {
+            console.log("ticket fetched successfully");
+            result(null, res);
+        }
+    });
+}
+
+// count nb ticket "Opération et gestion" by technicien
+intervention.CountIntType2ByTech = (id,result) => {
+    
+    dbConn.query(`SELECT count(idti) as intType2 from intervention WHERE owner=(select email from users where idu=?) AND type = "Opération et gestion"`,[id],function (err, res) {
+        if (err) {
+            console.log('Error while fetching the ticket');
+            result(null, err);
+        } else {
+            console.log("ticket fetched successfully");
+            result(null, res);
+        }
+    });
+}
 
 module.exports = intervention

@@ -186,9 +186,9 @@ Client.getClientByEmail = (email) => {
 
 }
 // update user
-Client.updateClient = (idclt, clientReqData, result) => {
+Client.updateClient = (id, clientReqData, result) => {
     let salt = bcrypt.genSaltSync(10);
-    dbConn.query("UPDATE client SET nom=? ,prenom=?,activitesociete=?,tel=?,email=? ,password=? WHERE idclt = ?", [clientReqData.nom, clientReqData.prenom, clientReqData.activitesociete, clientReqData.tel, clientReqData.email,  bcrypt.hashSync(clientReqData.password, salt), idclt], (err, res) => {
+    dbConn.query("UPDATE client SET nom=?, prenom=?, activitesociete=?, tel=?, email=? WHERE idclt = ?", [clientReqData.nom, clientReqData.prenom, clientReqData.activitesociete, clientReqData.tel, clientReqData.email, id], (err, res) => {
         if (err) {
             console.log('Error while updating the client');
             result(null, err);
@@ -228,6 +228,19 @@ Client.findAllnomSociete = (result) => {
 // get client signature
 Client.getSignature = (id, result) => {
     dbConn.query('SELECT signature FROM client WHERE idclt=?', [id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching signature');
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+
+}
+
+// get number of clients
+Client.getNbClient = (result) => {
+    dbConn.query('SELECT count(idclt) as clients FROM client', (err, res) => {
         if (err) {
             console.log('Error while fetching signature');
             result(null, err);

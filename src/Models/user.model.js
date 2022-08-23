@@ -93,8 +93,8 @@ User.searchUser = (mot,result) => {
 
 
 // get user by ID for update
-User.getUserByID = (idu, result) => {
-    dbConn.query('SELECT * FROM users WHERE idu=?', idu, (err, res) => {
+User.getUserByID = (id, result) => {
+    dbConn.query('SELECT * FROM users WHERE idu=?', id, (err, res) => {
         if (err) {
             console.log('Error while fetching user by id', err);
             result(null, err);
@@ -229,5 +229,30 @@ User.getNumTickTech = (result) => {
     });
 }
 
+//count number of technicien
+User.CountNbTechnicien = (result) => {
+    dbConn.query(' SELECT count(idu) as tech FROM users where poste="Technicien" ', (err, res) => {
+        if (err) {
+            console.log('Error while fetching users', err);
+            result(null, err);
+        } else {
+            console.log('Users fetched successfully');
+            result(null, res);
+        }
+    });
+}
+
+// count number of commercial
+User.countNbCommercial = (result) => {
+    dbConn.query(' SELECT count(idu) as comm FROM users where poste="Commercial" ', (err, res) => {
+        if (err) {
+            console.log('Error while fetching users', err);
+            result(null, err);
+        } else {
+            console.log('Users fetched successfully');
+            result(null, res);
+        }
+    });
+}
 
 module.exports = User;

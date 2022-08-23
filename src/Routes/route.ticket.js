@@ -32,6 +32,8 @@ router.get('/AllPartOrderClos', ticketController.findAllTicketsInterventionClos)
 router.get('/findTicketEnCours/:idti',ticketController.findTicketEnCours);
 router.get('/nbTicketsTechnicienEnCours', ticketController.getNBticketsTech);
 router.get('/CountTicketsClientEnCours', ticketController.CountTicketsClientEnCours);
+router.get('/CountTicketsIntervenion', ticketController.CountTicketsIntervenion);
+router.get('/CountTicketsIntReslou', ticketController.CountTicketsIntReslou);
 
 router.get('/nbTicketsInterventionEnCours', ticketController.CountTicketsIntervenionEnCours);
 router.get('/nbTicketsInterventionClos', ticketController.CountTicketInterventionClos);
@@ -42,6 +44,19 @@ router.put('/updateTicketPO/:id', parOrderController.updateTicketPO);
 router.put('/fermerTicketPO/:id', parOrderController.fermerTicketPO);
 router.delete('/deleteTechAff/:idu/:idti', ticketController.deleteTechAff);
 
+// count ticket by client
+router.get('/countInt/:id', ticketController.CountTicketsByClient);
+router.get('/countIntClos/:id', ticketController.CountClosByClient);
+router.get('/countIntEnCours/:id', ticketController.CountEnCoursByClient);
+router.get('/countIntResolu/:id', ticketController.CountResoluByClient);
+
+// count ticket by technicien
+router.get('/countTicketByTech/:id', ticketController.CountTicketByTech);
+router.get('/countEnCoursByTech/:id', ticketController.CountEnCoursByTech);
+router.get('/countResoluByTech/:id', ticketController.CountResoluByTech);
+
+router.get('/countIntType1ByTech/:id', ticketController.CountIntType1ByTech);
+router.get('/countIntType2ByTech/:id', ticketController.CountIntType2ByTech);
 
 //Ticket-offsite
 router.post('/createOffSite', offsiteContoller.createTicketAdmin);
@@ -66,6 +81,10 @@ router.post('/createpartOrder/:id', parOrderController.createTicketPartOrder);
 router.delete('/ticketPO/:id', parOrderController.deleteTicketPO);
 router.get('/ticketD/:id',parOrderController.getTicketByDossier);
 router.get('/nbTicketsPartOrderEnCours',parOrderController.CountTicketPartOrderEnCours);
+router.get('/nbTicketsPartOrder',parOrderController.CountTicketPartOrder);
+router.get('/nbTicketsPONouveau',parOrderController.CountTicketPartOrder2);
+router.get('/nbTicketsPOEnCours',parOrderController.CountTicketPartOrder3);
+router.get('/nbTicketsPOLivree',parOrderController.CountTicketPartOrder4);
 router.get('/AllTicketOrder',  parOrderController.findTicket);
 router.get('/AllTicketPO/:id',  parOrderController.getTicketByIDPO);
 router.get('/getTicketCom/:id',  parOrderController.getTicketByComm);
@@ -107,5 +126,15 @@ router.get('/getListSupAffectes/:idti',ticketController.getListSupAffectes);
 
 router.put('/updateStat/:id',ticketController.updateStatClos);
 
+//count ticket part order by client
+router.get('/countTicketClient/:id',  parOrderController.countTicketByClient);
+router.get('/countTicketStatus/:id',  parOrderController.countTicketByStatus);
+router.get('/countTicketN/:id',  parOrderController.countNouveauPOTicket);
+router.get('/countTicketEncours/:id',  parOrderController.countEncoursPOTicket);
+
+//count ticket part order by commercial
+router.get('/countTicketComm/:id',  parOrderController.CountTicketByComm);
+router.get('/countEnCoursTicketByComm/:id',  parOrderController.CountEnCoursTicketByComm);
+router.get('/countTicketLivreeByComm/:id',  parOrderController.CountTicketLivreeByComm);
 
 module.exports = router;

@@ -223,4 +223,17 @@ dossier.findclientsdossier = (result) => {
     });
 }
 
+//count number of dossier
+dossier.countNbDossier = (result) => {
+    dbConn.query('SELECT count(idd) as dossiers FROM dossier', (err, res) => {
+        if (err) {
+            console.log('Error while fetching dossier', err);
+            result(null, err);
+        } else {
+            console.log('dossier fetched successfully');
+            result(null, res);
+        }
+    });
+}
+
 module.exports = dossier

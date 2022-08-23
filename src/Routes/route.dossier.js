@@ -11,4 +11,5 @@ router.get('/searchRecord/:nom', dossierController.searchDossier);
 router.get('/AllDossier/:id', dossierController.getDossierByID);
 router.get('/findAllMatricules', dossierController.findAllMatricule);
 router.get('/findEmailDossier/:idclt', dossierController.findEmailSociete);
+router.get('/countNbDossier', dossierController.countNbDossier);
 module.exports = router;

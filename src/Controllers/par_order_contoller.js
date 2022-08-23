@@ -355,6 +355,47 @@ exports.CountTicketPartOrderEnCours = (req, res) => {
     })
 }
 
+exports.CountTicketPartOrder = (req, res) => {
+
+    partOrder.CountTicketsPartOrder( (err, tickets) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', tickets);
+        // res.json({"first_name":"Dheeraj"});
+        res.send( tickets);
+    })
+}
+exports.CountTicketPartOrder2 = (req, res) => {
+
+    partOrder.CountTicketsPartOrder2( (err, tickets) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', tickets);
+        // res.json({"first_name":"Dheeraj"});
+        res.send( tickets);
+    })
+}
+exports.CountTicketPartOrder3 = (req, res) => {
+
+    partOrder.CountTicketsPartOrder3( (err, tickets) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', tickets);
+        // res.json({"first_name":"Dheeraj"});
+        res.send( tickets);
+    })
+}
+exports.CountTicketPartOrder4 = (req, res) => {
+
+    partOrder.CountTicketsPartOrder4( (err, tickets) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', tickets);
+        // res.json({"first_name":"Dheeraj"});
+        res.send( tickets);
+    })
+}
+
 // modifier etat en "Commande confirmée" par le commercial
 exports.updateEtatTicketPO = (req, res) =>  {
    
@@ -424,6 +465,82 @@ exports.getTicketByDossier = (req, res) => {
     })
 }
 
+// count ticket by id client
+exports.countTicketByClient = (req, res) => {
+    partOrder.countTicketByClient(req.params.id, (err, tickets) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', tickets);
+        
+        res.send(tickets);
+    })
+}
+
+// count ticket by status
+exports.countTicketByStatus = (req, res) => {
+    partOrder.countTicketByStatus(req.params.id, (err, tickets) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', tickets);
+        
+        res.send(tickets);
+    })
+}
+
+// count ticket by status "en cours"
+exports.countEncoursPOTicket = (req, res) => {
+    partOrder.countEncoursPOTicket(req.params.id, (err, tickets) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', tickets);
+        
+        res.send(tickets);
+    })
+}
+
+// count ticket by status "nouveau"
+exports.countNouveauPOTicket = (req, res) => {
+    partOrder.countNouveauPOTicket(req.params.id, (err, tickets) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', tickets);
+        
+        res.send(tickets);
+    })
+}
+
+// count all ticket by commercial
+exports.CountTicketByComm = (req, res) => {
+    partOrder.countTicketByComm(req.params.id, (err, tickets) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', tickets);
+        
+        res.send(tickets);
+    })
+}
+
+// count en cours ticket by commercial
+exports.CountEnCoursTicketByComm = (req, res) => {
+    partOrder.countEnCoursTicketByComm(req.params.id, (err, tickets) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', tickets);
+        
+        res.send(tickets);
+    })
+}
+
+// count livrée ticket by commercial
+exports.CountTicketLivreeByComm = (req, res) => {
+    partOrder.countTicketLivreeByComm(req.params.id, (err, tickets) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', tickets);
+        
+        res.send(tickets);
+    })
+}
 
 
 

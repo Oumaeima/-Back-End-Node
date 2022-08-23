@@ -2,6 +2,7 @@ var dbConn = require('../../Config/db.config');
 var path = require('path')
 
 var offre = function (Offre) {
+    this.ticket_id = Offre.ticket_id;
     this.offre = Offre.offre;   
 }
 
@@ -33,5 +34,6 @@ offre.getOffre = (id,result) => {
         }
     });
 }
+
 
 module.exports = offre

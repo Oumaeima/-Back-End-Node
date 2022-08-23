@@ -1,4 +1,3 @@
-const { application } = require('express');
 const express = require('express');
 const router = express.Router();
 const userController = require('../Controllers/user.controller');
@@ -7,8 +6,10 @@ const userController = require('../Controllers/user.controller');
 
 /*****User ****/
 router.get('/AllUser', userController.getUserList);
+router.get('/getNbTech', userController.CountNbTechnicien);
 router.get('/AllCommercial', userController.getCommercialList);
-router.get('/:id', userController.getUserByID);
+router.get('/getNbCommercial', userController.countNbCommercial);
+router.get('/getUserByID/:id', userController.getUserByID);
 //router.get('/searchRecord/:nom', userController.getUserByName);
 router.get('/searchUser/:mot', userController.searchUser);
 router.post('/', userController.createNewUser);

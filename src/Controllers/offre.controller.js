@@ -63,11 +63,13 @@ exports.getOffre = (req, res) => {
             res.send(err);
         }
         else {
-            console.log('offre', users[0].offre);
+            console.log('offre');
             res.send(users)
             
         }
     })
 }
+
+
 
 

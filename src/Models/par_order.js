@@ -55,44 +55,44 @@ partOrder.createPartOrder= (id,data) => {
                     reject(false)
                     console.log(err);
                 }
-                resolve("ticket crée avec succée !");
-            }
-        );
-        dbConn.query('SELECT owner, commercial FROM partorder WHERE idd=(select idd from dossier where idclt=?)', [id], (err, res) => {
-            if (err) {
-                console.log('Error while fetching matricule by id', err);
+                dbConn.query('SELECT owner, commercial FROM partorder WHERE idd=(select idd from dossier where idclt=?)', [id], (err, res) => {
+                    if (err) {
+                        console.log('Error while fetching matricule by id', err);
+                        
+                    } else {
+                        owner = res[0].owner
+                        commercial = res[0].commercial
+                        console.log(owner);
+                        console.log(commercial);
+                        var transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: process.env.MAIL_USERNAME,
+                                pass: process.env.MAIL_PASSWORD
+                            },
+                        });
+                        var message = {
+                            from: process.env.MAIL_USERNAME,// sender address
+                            to: commercial, // list of receivers
+                            subject: "Nouveau ticket part order", // Subject line
+                            html: `
+                            <div style="padding:10px;border-style: ridge">
+                            <h3>Details</h3>
+                            <ul>
+                                vous avez recu une nouvelle ticket de type part order de la part de:
+                                <li>Client: ${owner}</li>
+                                Veuillez le contacter.
+                            </ul>
+                            `
+                        };
+                        transporter.sendMail(message)
+                    }
+                }
                 
-            } else {
-                owner = res[0].owner
-                commercial = res[0].commercial
-                console.log(owner);
-                console.log(commercial);
-                var transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: {
-                        user: process.env.MAIL_USERNAME,
-                        pass: process.env.MAIL_PASSWORD
-                    },
-                });
-                var message = {
-                    from: process.env.MAIL_USERNAME,// sender address
-                    to: commercial, // list of receivers
-                    subject: "Nouveau ticket part order", // Subject line
-                    html: `
-                    <div style="padding:10px;border-style: ridge">
-                    <h3>Details</h3>
-                    <ul>
-                        vous avez recu une nouvelle ticket de type part order de la part de:
-                        <li>Client: ${owner}</li>
-                        Veuillez le contacter.
-                    </ul>
-                    `
-                };
-                transporter.sendMail(message)
+                );
             }
-        }
-        
         );
+        
 
          
     }); 
@@ -446,6 +446,47 @@ partOrder.CountTicketsPartOrderEnCours = (result) => {
     });
 }
 
+partOrder.CountTicketsPartOrder = (result) => {
+    dbConn.query('SELECT count(idti) as nbTotal FROM partorder', function (err, res) {
+        if (err) {
+            console.log('Error while fetching ticket', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+partOrder.CountTicketsPartOrder2 = (result) => {
+    dbConn.query('SELECT count(idti) as nbN FROM partorder WHERE status="nouveau"', function (err, res) {
+        if (err) {
+            console.log('Error while fetching ticket', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+partOrder.CountTicketsPartOrder3 = (result) => {
+    dbConn.query('SELECT count(idti) as nbC FROM partorder WHERE status="en cours"', function (err, res) {
+        if (err) {
+            console.log('Error while fetching ticket', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+partOrder.CountTicketsPartOrder4 = (result) => {
+    dbConn.query('SELECT count(idti) as nbL FROM partorder WHERE status="Clos"', function (err, res) {
+        if (err) {
+            console.log('Error while fetching ticket', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+
 // modifier etat en "Commande confirmée" par le commercial
 partOrder.updateEtatTicketPO = (id, result) => {
 
@@ -491,7 +532,7 @@ partOrder.updateState3TicketPO = (id, result) => {
 // modifier etat en "Livrée" par le commercial
 partOrder.updateState4TicketPO = (id, result) => {
 
-    dbConn.query(`UPDATE partorder SET status="Livrée", etatpiece="Livrée" WHERE idti=?`,[id], (err, res) => {
+    dbConn.query(`UPDATE partorder SET etatpiece="Livrée" WHERE idti=?`,[id], (err, res) => {
         if (err) {
             console.log('Error while updating the ticket');
             result(null, err);
@@ -521,6 +562,90 @@ partOrder.getTicketByDossier = (id, result) => {
     dbConn.query('SELECT * FROM partorder WHERE idd=?', [id], (err, res) => {
         if (err) {
             console.log('Error while fetching matricule by id', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+
+// count all ticket by id client
+partOrder.countTicketByClient = (id, result) => {
+    dbConn.query('SELECT count(idti) as po FROM partorder WHERE idd=(select idd from dossier where idclt=?)', [id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching matricule by id', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+
+// count ticket "Clos" by client
+partOrder.countTicketByStatus = (id, result) => {
+    dbConn.query('SELECT count(idti) as poC FROM partorder WHERE idd=(select idd from dossier where idclt=?) AND status="Clos" ', [id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching matricule by id', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+
+// count ticket "en cours" by client
+partOrder.countEncoursPOTicket = (id, result) => {
+    dbConn.query('SELECT count(idti) as poCours FROM partorder WHERE idd=(select idd from dossier where idclt=?) AND status="en cours" ', [id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching matricule by id', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+
+// count ticket "nouveau" by client
+partOrder.countNouveauPOTicket = (id, result) => {
+    dbConn.query('SELECT count(idti) as poN FROM partorder WHERE idd=(select idd from dossier where idclt=?) AND status="nouveau" ', [id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching matricule by id', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+
+// count all ticket by commercial
+partOrder.countTicketByComm = (id, result) => {
+    dbConn.query('SELECT count(idti) as po FROM partorder WHERE commercial=(select email from users where idu=?)', [id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching matricule by id', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+
+// count en cours ticket by commercial
+partOrder.countEnCoursTicketByComm = (id, result) => {
+    dbConn.query('SELECT count(idti) as poC FROM partorder WHERE commercial=(select email from users where idu=?) AND status="en cours"', [id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching matricule by id', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+
+// count livrée ticket by commercial
+partOrder.countTicketLivreeByComm = (id, result) => {
+    dbConn.query('SELECT count(idti) as poL FROM partorder WHERE commercial=(select email from users where idu=?) AND etatpiece="Livrée"', [id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching ticket', err);
             result(null, err);
         } else {
             result(null, res);
