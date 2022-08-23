@@ -542,5 +542,16 @@ exports.CountTicketLivreeByComm = (req, res) => {
     })
 }
 
+// count nouveau ticket by commercial
+exports.CountTicketNouveauByComm = (req, res) => {
+    partOrder.countTicketNouveauByComm(req.params.id, (err, tickets) => {
+        if (err)
+            res.send(err);
+        console.log('single user data', tickets);
+        
+        res.send(tickets);
+    })
+}
+
 
 

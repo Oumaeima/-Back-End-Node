@@ -653,4 +653,16 @@ partOrder.countTicketLivreeByComm = (id, result) => {
     });
 }
 
+// count nouveau ticket by commercial
+partOrder.countTicketNouveauByComm = (id, result) => {
+    dbConn.query('SELECT count(idti) as poN FROM partorder WHERE commercial=(select email from users where idu=?) AND status="nouveau"', [id], (err, res) => {
+        if (err) {
+            console.log('Error while fetching ticket', err);
+            result(null, err);
+        } else {
+            result(null, res);
+        }
+    });
+}
+
 module.exports = partOrder

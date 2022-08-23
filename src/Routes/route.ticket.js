@@ -136,5 +136,6 @@ router.get('/countTicketEncours/:id',  parOrderController.countEncoursPOTicket);
 router.get('/countTicketComm/:id',  parOrderController.CountTicketByComm);
 router.get('/countEnCoursTicketByComm/:id',  parOrderController.CountEnCoursTicketByComm);
 router.get('/countTicketLivreeByComm/:id',  parOrderController.CountTicketLivreeByComm);
+router.get('/countTicketNouveauByComm/:id',  parOrderController.CountTicketNouveauByComm);
 
 module.exports = router;
