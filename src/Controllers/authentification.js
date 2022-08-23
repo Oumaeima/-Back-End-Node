@@ -51,8 +51,9 @@ exports.login = async (req, res, next) => {
             if (rows.length == 0) {
                 res.status(401).json({ msg: "User not found " })
                
-            } else {
-                const check = await bcrypte.compare(password, rows[0].password);
+            } else { 
+                
+                const check = cryptr.encrypt(password, rows[0].password);
                 console.log(check);
                 if (check) {
                     console.log(rows[0]);
@@ -265,7 +266,9 @@ exports.createClient = async (req, res, next) => {
             let v2 = 1000 + Math.floor(Math.random() * (9999 - 1000 + 1));
 
             let v3 = ('OPM'.concat(v1, v2));
-newclient.signature =v3;
+            
+            newclient.signature =v3;
+
         try {
             newclient.password = cryptr.encrypt(newclient.password);
         } catch (error) {
@@ -278,17 +281,17 @@ newclient.signature =v3;
 
         sql.getConnection((err, connection) => {
 
-            connection.query(`INSERT INTO client SET ?,role="client"`, newclient, (err, rows) => {
+            connection.query(`INSERT INTO users SET ?, poste="Client", role="Client"`, newclient, (err, rows) => {
 
                 if (!rows || rows.length == 0) {
                     res.status(200).json({ msg: "probleme" })
                 } else {
                     console.log(rows);
-                    connection.query("SELECT idclt from client where email = ?", newclient.email, (err2, rows2) => {
+                    connection.query("SELECT idu from users where role='Client' AND email = ?", newclient.email, (err2, rows2) => {
                         connection.release()
-                        createSendToken(rows2[0].idclt, 201, res)
+                        createSendToken(rows2[0].idu, 201, res)
                     })
-                    connection.query('SELECT email, password, signature FROM client WHERE email = ?', newclient.email, (err, res) => {
+                    connection.query('SELECT email, password, signature FROM users WHERE email = ?', newclient.email, (err, res) => {
                         if (err) {
                             console.log('Error while fetching id client', err);
                             

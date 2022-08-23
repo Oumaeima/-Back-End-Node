@@ -36,7 +36,7 @@ intervention.createTicketClient = (id,data) => {
             };
             
             dbConn.query(
-                `INSERT INTO intervention SET type ="${data.type}", sla ="${data.sla}", owner =(SELECT email FROM client WHERE idclt="${id}"), datedeb = "${data.datedeb}", dateClos = "${data.dateClos}",taches = "${data.taches}", idd = (select idd from dossier where idclt ="${id}" ) ,status = "nouveau"`, [userItem],
+                `INSERT INTO intervention SET type ="${data.type}", sla ="${data.sla}", owner =(SELECT email FROM users WHERE idu="${id}"), datedeb = "${data.datedeb}", dateClos = "${data.dateClos}",taches = "${data.taches}", idd = (select idd from dossier where idclt ="${id}" ) ,status = "nouveau"`, [userItem],
                 function (err, rows) {
                     if (err) {
                         reject(false)
@@ -66,7 +66,7 @@ intervention.updateOwnerTicketInt = (idti, ticketReqData, result) => {
 
     dbConn.query("UPDATE intervention SET owner=? , status='en cours' WHERE idti = ?", [ticketReqData.owner, idti], (err, res) => {
         if (err) {
-            console.log('Error while updating the client');
+            console.log('Error while updating the ticket');
             result(null, err);
         } else {
             console.log("ticket updated successfully");
@@ -79,7 +79,7 @@ intervention.updateStatClos = (id, result) => {
 
     dbConn.query("UPDATE intervention SET status='Clos' WHERE idti = ?", [id], (err, res) => {
         if (err) {
-            console.log('Error while updating the client');
+            console.log('Error while updating the ticket');
             result(null, err);
         } else {
             console.log("ticket updated successfully");

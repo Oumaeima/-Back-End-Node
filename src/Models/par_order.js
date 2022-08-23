@@ -47,9 +47,9 @@ partOrder.createPartOrder= (id,data) => {
 
         let v3 = ('tracking'.concat(v1, v2));
         let owner
-        let commercial
+        let commercial 
         dbConn.query(
-            `INSERT INTO partorder  SET nomCommande="${data.nomCommande}", description ="${data.description}", owner =(SELECT email FROM client WHERE idclt="${id}"), date="${value}", status="nouveau", commercial = (select email from users where poste="Commercial" AND nomsociete =(select nomsociete from client where idclt="${id}") ) , etatpiece="en cours de traitement", idd = (select idd from dossier where idclt ="${id}" ), trackingNumber="${v3}"`, [userItem],
+            `INSERT INTO partorder  SET nomCommande="${data.nomCommande}", description ="${data.description}", owner =(SELECT email FROM users WHERE idu="${id}"), date="${value}", status="nouveau", commercial = (select email from users where poste="Commercial" AND nomsociete =(select nomsociete from users where idu="${id}") ) , etatpiece="en cours de traitement", idd = (select idd from dossier where idclt ="${id}" ), trackingNumber="${v3}"`, [userItem],
             function (err, rows) {
                 if (err) {
                     reject(false)
@@ -166,7 +166,6 @@ partOrder.delete_TicketPO = (id, result) => {
             result(null, res);
         }
     });
-
 }
 
 partOrder.findAllTicketPartOrderID= (idclt,result) => {

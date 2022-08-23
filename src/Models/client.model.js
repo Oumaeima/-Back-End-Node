@@ -12,7 +12,7 @@ var Client = function (client) {
 
 // get all users
 Client.getAllClient = (result) => {
-    dbConn.query('SELECT * FROM client', (err, res) => {
+    dbConn.query('SELECT * FROM users WHERE role="Client"', (err, res) => {
         if (err) {
             console.log('Error while fetching client', err);
             result(null, err);
@@ -138,7 +138,7 @@ Client.createClient = (userReqData) => {
 };
 // get user by ID for update
 Client.getClientByID = (id, result) => {
-    dbConn.query('SELECT * FROM client WHERE idclt=?', id, (err, res) => {
+    dbConn.query('SELECT * FROM users WHERE idu=?', [id], (err, res) => {
         if (err) {
             console.log('Error while fetching client by id', err);
             result(null, err);
@@ -151,7 +151,7 @@ Client.getClientByID = (id, result) => {
 
 // get email client by ID
 Client.getEmailClientByID = (id, result) => {
-    dbConn.query('SELECT email FROM client WHERE idclt=?', [id], (err, res) => {
+    dbConn.query('SELECT email FROM users WHERE idu=?', [id], (err, res) => {
         if (err) {
             console.log('Error while fetching client by id', err);
             result(null, err);
@@ -177,7 +177,7 @@ Client.getMatClientByID = (id, result) => {
 
 Client.getClientByEmail = (email) => {
 
-    dbConn.query('SELECT * FROM client WHERE email = ?', [email], (error, users) => {
+    dbConn.query('SELECT * FROM users WHERE email = ?', [email], (error, users) => {
         if (error) {
             return reject(error);
         }
@@ -188,7 +188,7 @@ Client.getClientByEmail = (email) => {
 // update user
 Client.updateClient = (id, clientReqData, result) => {
     let salt = bcrypt.genSaltSync(10);
-    dbConn.query("UPDATE client SET nom=?, prenom=?, activitesociete=?, tel=?, email=? WHERE idclt = ?", [clientReqData.nom, clientReqData.prenom, clientReqData.activitesociete, clientReqData.tel, clientReqData.email, id], (err, res) => {
+    dbConn.query("UPDATE users SET nom=?, prenom=?, activitesociete=?, tel=?, email=? WHERE idu = ?", [clientReqData.nom, clientReqData.prenom, clientReqData.activitesociete, clientReqData.tel, clientReqData.email, id], (err, res) => {
         if (err) {
             console.log('Error while updating the client');
             result(null, err);
@@ -201,7 +201,7 @@ Client.updateClient = (id, clientReqData, result) => {
 
 // delete employee
 Client.delete_Client = (id, result) => {
-    dbConn.query(' DELETE FROM client WHERE idclt=?', [id], (err, res) => {
+    dbConn.query(' DELETE FROM users WHERE idu=?', [id], (err, res) => {
         if (err) {
             console.log('Error while deleting the client');
             result(null, err);
@@ -213,7 +213,7 @@ Client.delete_Client = (id, result) => {
 }
 
 Client.findAllnomSociete = (result) => {
-    dbConn.query('SELECT nomsociete from client', function (err, res) {
+    dbConn.query('SELECT nomsociete from users', function (err, res) {
         if (err) {
             console.log('Error');
           
@@ -227,7 +227,7 @@ Client.findAllnomSociete = (result) => {
 
 // get client signature
 Client.getSignature = (id, result) => {
-    dbConn.query('SELECT signature FROM client WHERE idclt=?', [id], (err, res) => {
+    dbConn.query('SELECT signature FROM users WHERE idu=?', [id], (err, res) => {
         if (err) {
             console.log('Error while fetching signature');
             result(null, err);
@@ -240,7 +240,7 @@ Client.getSignature = (id, result) => {
 
 // get number of clients
 Client.getNbClient = (result) => {
-    dbConn.query('SELECT count(idclt) as clients FROM client', (err, res) => {
+    dbConn.query('SELECT count(idu) as clients FROM users WHERE role="Client"', (err, res) => {
         if (err) {
             console.log('Error while fetching signature');
             result(null, err);

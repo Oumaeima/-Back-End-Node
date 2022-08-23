@@ -29,7 +29,7 @@ dossier.createDossier = (data) => {
         idclt :data.idclt
     };
     dbConn.query(
-        `INSERT INTO dossier SET nomsociete="${data.nomsociete}", categorie = "${data.categorie}",type = "${data.type}",matricule="${data.matricule}",idclt = (SELECT idclt FROM client WHERE nomsociete = "${data.nomsociete}")`, [userItem],
+        `INSERT INTO dossier SET nomsociete="${data.nomsociete}", categorie = "${data.categorie}",type = "${data.type}",matricule="${data.matricule}",idclt = (SELECT idu FROM users WHERE role="Client" AND nomsociete = "${data.nomsociete}")`, [userItem],
         function (err, rows) {
             if (err) {
                 //  reject(false)
