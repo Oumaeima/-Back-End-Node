@@ -211,7 +211,7 @@ exports.createuser = async (req, res, next) => {
         res.status(401).json({ msg: 'All fields required' });
     } else {
         try {
-            newuser.password = await bcrypte.hash(newuser.password, 12);
+            newuser.password = cryptr.encrypt(newuser.password, 12);
         } catch (error) {
             res.status(401).json({ msg: 'some thingwent wrong' });
             next()
@@ -356,7 +356,7 @@ exports.createCommercial = async (req, res, next) => {
         res.status(401).json({ msg: 'All fields required' });
     } else {
         try {
-            newCommercial.password = await bcrypte.hash(newCommercial.password, 12);
+            newCommercial.password = cryptr.encrypt(newCommercial.password, 12);
         } catch (error) {
             res.status(401).json({ msg: 'some thingwent wrong' });
             next()
@@ -401,7 +401,7 @@ exports.createAdmin = async (req, res, next) => {
         res.status(401).json({ msg: 'All fields required' });
     } else {
         try {
-            newAdmin.password = await bcrypte.hash(newAdmin.password, 12);
+            newAdmin.password = cryptr.encrypt(newAdmin.password, 12);
         } catch (error) {
             res.status(401).json({ msg: 'some thingwent wrong' });
             next()
@@ -412,15 +412,15 @@ exports.createAdmin = async (req, res, next) => {
 
         sql.getConnection((err, connection) => {
 
-            connection.query(`INSERT INTO admin SET ? ,role="admin"`, newAdmin, (err, rows) => {
+            connection.query(`INSERT INTO users SET ?, poste="admin", role="admin"`, newAdmin, (err, rows) => {
 
                 if (!rows || rows.length == 0) {
                     res.status(200).json({ msg: "probleeeem" })
                 } else {
                     console.log(rows);
-                    connection.query("SELECT ida from admin where email = ?", newAdmin.email, (err2, rows2) => {
+                    connection.query("SELECT idu from users where email = ?", newAdmin.email, (err2, rows2) => {
                         connection.release()
-                        createSendToken(rows2[0].ida, 201, res)
+                        createSendToken(rows2[0].idu, 201, res)
                     })
                     
                 }
