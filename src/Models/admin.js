@@ -11,7 +11,7 @@ var admin = function (admin) {
 
 // get all admin
 admin.getAllAdmin = (result) => {
-    dbConn.query('SELECT * FROM admin', (err, res) => {
+    dbConn.query('SELECT * FROM users WHERE poste="admin"', (err, res) => {
         if (err) {
             console.log('Error while fetching admin', err);
             result(null, err);
@@ -23,7 +23,7 @@ admin.getAllAdmin = (result) => {
 }
 // get user by ID for update
 admin.getAdminByID = (id, result) => {
-    dbConn.query('SELECT * FROM admin WHERE ida = ?', [id], (err, res) => {
+    dbConn.query('SELECT * FROM users WHERE idu = ?', [id], (err, res) => {
         if (err) {
             console.log('Error while fetching user by id', err);
             result(null, err);
@@ -67,9 +67,9 @@ admin.CreateAdmin = (data) => {
         })
     }
     // update user
-    admin.updateAdmin = (ida, userReqData, result) => {
+    admin.updateAdmin = (id, userReqData, result) => {
         let salt = bcrypt.genSaltSync(10);
-        dbConn.query("UPDATE admin SET nom=? ,prenom=? ,email=? WHERE ida = ?", [userReqData.nom,userReqData.prenom,userReqData.email, ida], (err, res) => {
+        dbConn.query("UPDATE users SET nom=? ,prenom=? ,email=? WHERE idu = ?", [userReqData.nom,userReqData.prenom,userReqData.email, id], (err, res) => {
             if (err) {
                 console.log('Error while updating the admin');
                 result(null, err);
@@ -93,8 +93,8 @@ admin.CreateAdmin = (data) => {
         });
     }  
 // delete admin
-admin.deleteAdmin = (ida, result) => {
-    dbConn.query('DELETE FROM admin WHERE ida=?', [ida], (err, res) => {
+admin.deleteAdmin = (id, result) => {
+    dbConn.query('DELETE FROM users WHERE ida=?', [id], (err, res) => {
         if (err) {
             console.log('Error while deleting the admin');
             result(null, err);

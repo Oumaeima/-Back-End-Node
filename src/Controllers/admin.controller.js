@@ -43,7 +43,7 @@ exports.updateAdmin = (req, res) => {
     console.log('adminReqData update', adminReqData);
     // check null
 
-    AdminModel.updateAdmin(req.params.ida, adminReqData, (err, admin) => {
+    AdminModel.updateAdmin(req.params.id, adminReqData, (err, admin) => {
         if (err)
             res.send(err);
         res.json({ status: true, message: 'Admin updated Successfully' })
@@ -65,7 +65,7 @@ exports.updateAdminPassword = (req, res) => {
 
 // delete user
 exports.delete_Admin = (req, res) => {
-    AdminModel.deleteAdmin(req.params.ida, (err, admin) => {
+    AdminModel.deleteAdmin(req.params.id, (err, admin) => {
         if (err)
             res.send(err);
         res.json({ success: true, message: 'Admin deleted successully!' });
@@ -79,7 +79,7 @@ exports.getAdminByID = (req, res) => {
             res.send(err);
         console.log('single user data', admin);
         // res.json({"first_name":"Dheeraj"});
-        res.send(JSON.stringify({ status: 200, error: null, response: admin }));
+        res.send(admin);
     })
 }
 exports.searchadmin = (req, res) => {
