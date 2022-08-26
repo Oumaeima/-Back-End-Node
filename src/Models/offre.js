@@ -6,21 +6,21 @@ var offre = function (Offre) {
     this.offre = Offre.offre;   
 }
 
-offre.createOffre= (id,data) => {
-    return new Promise(async (resolve, reject) => {
-        
+offre.createOffre= (id, data, result) => {
+     
         dbConn.query(
-            `INSERT INTO offre  SET offre="${data}", ticket_id =(SELECT idti FROM partorder WHERE idti="${id}")`,
-            function (err, rows) {
+            `INSERT INTO offre  SET offre="${data}", ticket_id =(SELECT idti FROM partorder WHERE idti="${id}")`, (err, res) => {
                 if (err) {
-                    reject(false)
-                    console.log(err);
+                    console.log('Error while updating the ticket');
+                    result(null, err);
+                }else {
+                    console.log("ticket updated successfully");
+                    result(null, res);
                 }
-                resolve("offre crée avec succée !");
             }
         );
            
-    }); 
+     
 };
 
 offre.getOffre = (id,result) => {

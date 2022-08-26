@@ -36,7 +36,6 @@ const createSendToken = (users, statusCode, res) => {
     });
 };
 
-
 exports.login = async (req, res, next) => {
     const { email, password } = req.body;
 
@@ -97,6 +96,7 @@ exports.loginAdmin = async (req, res, next) => {
     })
     
 }
+
 exports.loginSuperAdmin = async (req, res, next) => {
     const { email, password } = req.body;
 
@@ -126,6 +126,7 @@ exports.loginSuperAdmin = async (req, res, next) => {
     })
     
 }
+
 exports.loginClient = async (req, res, next) => {
     const { email, password } = req.body;
 
@@ -197,6 +198,7 @@ exports.signup = async (req, res, next) => {
 
 
 }
+
 exports.createuser = async (req, res, next) => {
     let newuser = req.body;
     console.log(newuser.nom);
@@ -205,6 +207,8 @@ exports.createuser = async (req, res, next) => {
     console.log(newuser.email);
     console.log(newuser.password);
     console.log(newuser.role);
+
+    let email, password
 
     if (!newuser.nom || !newuser.prenom || !newuser.tel  ||!newuser.email || !newuser.password) {
         console.log("here");
@@ -233,6 +237,42 @@ exports.createuser = async (req, res, next) => {
                         createSendToken(rows2[0].idu, 201, res)
                     })
                     // 
+                    connection.query('SELECT email, password FROM users WHERE email = ?', newuser.email, (err, res) => {
+                        if (err) {
+                            console.log('Error while fetching id user', err);
+                            
+                        } else {
+                            const decryptedString = cryptr.decrypt(res[0].password);
+                            email = res[0].email
+                            password = decryptedString
+                            console.log("email client "+email);
+                            console.log("password client "+password);
+                            var transporter = nodemailer.createTransport({
+                                service: 'gmail',
+                                auth: {
+                                    user: process.env.MAIL_USERNAME,
+                                    pass: process.env.MAIL_PASSWORD
+                                },
+                            });
+                            var message = {
+                                from: process.env.MAIL_USERNAME,// sender address
+                                to: email, // list of receivers
+                                subject: "Coordonnées de votre compte de l'application opm", // Subject line
+                                html: `
+                                <div style="padding:10px;border-style: ridge">
+                                <h3>Details</h3>
+                                <ul>
+                                    Voici les Coordonnées d'accées à votre compte d'application OPM:
+                                    <li>Email : ${email}</li>
+                                    <li>Mot de passe : ${password}</li>
+                                </ul>
+                                `
+                            };
+                            transporter.sendMail(message) 
+                        }
+                    }
+                    
+                    );
                 }
             })
         })
@@ -241,7 +281,6 @@ exports.createuser = async (req, res, next) => {
     }
   
 }
-
 
 exports.createClient = async (req, res, next) => {
     let newclient = req.body;
@@ -272,7 +311,7 @@ exports.createClient = async (req, res, next) => {
         try {
             newclient.password = cryptr.encrypt(newclient.password);
         } catch (error) {
-            res.status(401).json({ msg: 'some thingwent wrong' });
+            res.status(401).json({ msg: 'some thing went wrong' });
             next()
         }
 
@@ -351,6 +390,8 @@ exports.createCommercial = async (req, res, next) => {
     console.log(newCommercial.password);
     console.log(newCommercial.role);
 
+    let email, password
+
     if (!newCommercial.nom || !newCommercial.prenom || !newCommercial.tel  ||!newCommercial.email || !newCommercial.password || !newCommercial.nomsociete) {
         console.log("here");
         res.status(401).json({ msg: 'All fields required' });
@@ -378,6 +419,42 @@ exports.createCommercial = async (req, res, next) => {
                         createSendToken(rows2[0].idu, 201, res)
                     })
                     // 
+                    connection.query('SELECT email, password FROM users WHERE email = ?', newCommercial.email, (err, res) => {
+                        if (err) {
+                            console.log('Error while fetching id user', err);
+                            
+                        } else {
+                            const decryptedString = cryptr.decrypt(res[0].password);
+                            email = res[0].email
+                            password = decryptedString
+                            console.log("email commercial "+email);
+                            console.log("password commercial "+password);
+                            var transporter = nodemailer.createTransport({
+                                service: 'gmail',
+                                auth: {
+                                    user: process.env.MAIL_USERNAME,
+                                    pass: process.env.MAIL_PASSWORD
+                                },
+                            });
+                            var message = {
+                                from: process.env.MAIL_USERNAME,// sender address
+                                to: email, // list of receivers
+                                subject: "Coordonnées de votre compte de l'application opm", // Subject line
+                                html: `
+                                <div style="padding:10px;border-style: ridge">
+                                <h3>Details</h3>
+                                <ul>
+                                    Voici les Coordonnées d'accées à votre compte d'application OPM:
+                                    <li>Email : ${email}</li>
+                                    <li>Mot de passe : ${password}</li>
+                                </ul>
+                                `
+                            };
+                            transporter.sendMail(message) 
+                        }
+                    }
+                    
+                    );
                 }
             })
         })
@@ -396,6 +473,9 @@ exports.createAdmin = async (req, res, next) => {
    
     console.log(newAdmin.password);
     console.log(newAdmin.role);
+
+    let email, password
+
     if ( !newAdmin.nom|| !newAdmin.prenom ||!newAdmin.email || !newAdmin.password) {
         console.log("here");
         res.status(401).json({ msg: 'All fields required' });
@@ -422,7 +502,42 @@ exports.createAdmin = async (req, res, next) => {
                         connection.release()
                         createSendToken(rows2[0].idu, 201, res)
                     })
+                    connection.query('SELECT email, password FROM users WHERE email = ?', newAdmin.email, (err, res) => {
+                        if (err) {
+                            console.log('Error while fetching id user', err);
+                            
+                        } else {
+                            const decryptedString = cryptr.decrypt(res[0].password);
+                            email = res[0].email
+                            password = decryptedString
+                            console.log("email admin "+email);
+                            console.log("password admin "+password);
+                            var transporter = nodemailer.createTransport({
+                                service: 'gmail',
+                                auth: {
+                                    user: process.env.MAIL_USERNAME,
+                                    pass: process.env.MAIL_PASSWORD
+                                },
+                            });
+                            var message = {
+                                from: process.env.MAIL_USERNAME,// sender address
+                                to: email, // list of receivers
+                                subject: "Coordonnées de votre compte de l'application opm", // Subject line
+                                html: `
+                                <div style="padding:10px;border-style: ridge">
+                                <h3>Details</h3>
+                                <ul>
+                                    Voici les Coordonnées d'accées à votre compte d'application OPM:
+                                    <li>Email : ${email}</li>
+                                    <li>Mot de passe : ${password}</li>
+                                </ul>
+                                `
+                            };
+                            transporter.sendMail(message) 
+                        }
+                    }
                     
+                    );
                 }
             })
         })

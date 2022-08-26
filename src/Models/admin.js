@@ -94,7 +94,7 @@ admin.CreateAdmin = (data) => {
     }  
 // delete admin
 admin.deleteAdmin = (id, result) => {
-    dbConn.query('DELETE FROM users WHERE ida=?', [id], (err, res) => {
+    dbConn.query('DELETE FROM users WHERE idu=?', [id], (err, res) => {
         if (err) {
             console.log('Error while deleting the admin');
             result(null, err);

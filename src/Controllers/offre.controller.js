@@ -29,21 +29,23 @@ exports.index = function(req, res){
         var file = req.files.uploaded_pdf
         var img_name=file.name;
          if(file.mimetype == "application/pdf"){
-            if(!req.files){
-                console.log("No Files Found");
-            }else{
-                
-                console.log(img_name);
-                offre.createOffre(req.params.id, [img_name], (err, tic) => {
-                    if (err)
-                        res.send(err);
-                    else {
-                        res.send(tic)
-                        res.json({ status: true, message: 'offre Created Successfully' })
-                    }
-                })            
-            }                   
-             
+            file.mv('src/Controllers/download/'+file.name, function(err) {
+                if(err){
+                    console.log("No Files Found");
+                }else{
+                    
+                    console.log(img_name);
+                    offre.createOffre(req.params.id, [img_name], (err, tic) => {
+                        if (err)
+                            res.send(err);
+                        else {
+                            res.send(tic)
+                            
+                        }
+                    })            
+                }    
+            })
+                         
           } else {
             message = "This format is not allowed , please upload file with '.pdf' extension";
             
@@ -66,6 +68,20 @@ exports.getOffre = (req, res) => {
             console.log('offre');
             res.send(users)
             
+        }
+    })
+}
+
+exports.downloadOffre = (req, res) => {
+    offre.getOffre(req.params.id, (err, users) => {
+        console.log('offre');
+        if (err) {
+            res.send(err);
+        }
+        else {
+            console.log('offre downloaded', users[0].offre);
+            const file = `${__dirname}/download/${users[0].offre}`;
+            res.download(file);
         }
     })
 }
