@@ -11,10 +11,10 @@ offre.createOffre= (id, data, result) => {
         dbConn.query(
             `INSERT INTO offre  SET offre="${data}", ticket_id =(SELECT idti FROM partorder WHERE idti="${id}")`, (err, res) => {
                 if (err) {
-                    console.log('Error while updating the ticket');
+                    console.log('Error while addinh offre');
                     result(null, err);
                 }else {
-                    console.log("ticket updated successfully");
+                    console.log("offre added successfully");
                     result(null, res);
                 }
             }
@@ -31,6 +31,19 @@ offre.getOffre = (id,result) => {
         else {
             result(null, res);
             //console.log(result);
+        }
+    });
+}
+
+offre.updateOffre = (id, data, result) => {
+
+    dbConn.query(`UPDATE offre SET offre='${data}' WHERE ticket_id = ?`, [id], (err, res) => {
+        if (err) {
+            console.log('Error while updating the offre');
+            result(null, err);
+        } else {
+            console.log("offre updated successfully");
+            result(null, res);
         }
     });
 }

@@ -86,6 +86,40 @@ exports.downloadOffre = (req, res) => {
     })
 }
 
+exports.updateOffre = function(req, res){
+    message = '';
+   if(req.method == "PUT"){
+      
+      if (!req.files)
+                return res.status(400).send('No files were uploaded.');
+        var file = req.files.uploaded_pdf
+        var img_name=file.name;
+         if(file.mimetype == "application/pdf"){
+            file.mv('src/Controllers/download/'+file.name, function(err) {
+                if(err){
+                    console.log("No Files Found");
+                }else{
+                    
+                    console.log(img_name);
+                    offre.updateOffre(req.params.id, [img_name], (err, tic) => {
+                        if (err)
+                            res.send(err);
+                        else {
+                            res.json({ status: true, message: 'ticket updated Successfully' })                           
+                        }
+                    })            
+                }    
+            })
+                         
+          } else {
+            message = "This format is not allowed , please upload file with '.pdf' extension";
+            
+          }
+   } else {
+      console.log("error");
+   }
+};
+
 
 
 
