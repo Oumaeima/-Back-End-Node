@@ -1,5 +1,7 @@
 const dbConn = require('../../config/db.config');
 const bcrypt = require('bcrypt');
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('myTotallySecretKey');
 
 var admin = function (admin) {
   
@@ -82,7 +84,7 @@ admin.CreateAdmin = (data) => {
 //update Admin Password
     admin.updateAdminPassword = (ida, userReqData, result) => {
         let salt = bcrypt.genSaltSync(10);
-        dbConn.query("UPDATE admin SET password=? WHERE ida = ?", [bcrypt.hashSync(userReqData.password, salt), ida], (err, res) => {
+        dbConn.query("UPDATE admin SET password=? WHERE ida = ?", [cryptr.encrypt(userReqData.password, salt), ida], (err, res) => {
             if (err) {
                 console.log('Error while updating the password');
                 result(null, err);
