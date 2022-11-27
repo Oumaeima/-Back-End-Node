@@ -5,7 +5,7 @@ const cors = require('cors');
 const fileUpload = require('express-fileupload');
 require("dotenv").config();
 
-
+const app = express();
 const buildPath = path.join(__dirname, '..', 'build');
 app.use(express.json());
 app.use(express.static(buildPath));
